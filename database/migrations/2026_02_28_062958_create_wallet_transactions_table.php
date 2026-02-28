@@ -13,25 +13,34 @@ return new class extends Migration
     {
         Schema::create('wallet_transactions', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique()->index();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('wallet_id')->constrained()->onDelete('cascade');
 
             // --- OPTIONAL RELATIONSHIPS (The Links) ---
             
             // Link to a specific Budget Category (e.g., Food, Transport)
-            $table->foreignId('budget_allocation_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('budget_allocation_id')
+              ->nullable()
+              ->constrained('budget_allocations')
+              ->onDelete('set null');
             
             // Link to a Savings Goal (e.g., Emergency Fund, New Phone)
-            $table->foreignId('saving_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('saving_id')
+              ->nullable()
+              ->constrained('savings')
+              ->onDelete('set null');
             
             // Link to a Loan/Debt (e.g., Kredivo, Borrowing from a friend)
-            $table->foreignId('loan_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('loan_id')
+              ->nullable()
+              ->constrained('loans')
+              ->onDelete('set null');
 
             // --- TRANSACTION DETAILS ---
-            
             $table->string('description');
             $table->decimal('amount', 15, 2);
-            
+
             /**
              * income: External money coming in (Salary, Freelance)
              * expense: General spending (not necessarily tied to a budget)
@@ -41,12 +50,8 @@ return new class extends Migration
              * loan_disbursement: Receiving borrowed money (adds to Wallet & Loan balance)
              */
             $table->enum('type', [
-                'income', 
-                'expense', 
-                'budget_spending', 
-                'saving', 
-                'loan_repayment', 
-                'loan_disbursement'
+                'income', 'expense', 'budget_spending', 
+                'saving', 'loan_repayment', 'loan_disbursement'
             ]);
 
             $table->timestamp('transaction_date');
