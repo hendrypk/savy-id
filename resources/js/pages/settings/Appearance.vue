@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
+import { Head, Link } from '@inertiajs/vue3';
+import AppearanceTabs from '@/components/AppearanceTabs.vue';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Kita tidak butuh breadcrumbItems lagi karena sudah pakai tombol Back manual
 </script>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import { 
   PlusIcon,
   ArrowTrendingUpIcon,
@@ -10,6 +8,8 @@ import {
   HandRaisedIcon,
   ClockIcon
 } from '@heroicons/vue/24/outline';
+import { Head, Link } from '@inertiajs/vue3';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Mock Data Terpadu
 const stats = {
@@ -90,21 +90,21 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'curr
           <Link href="#" class="text-[10px] font-bold text-indigo-600 underline">Manage</Link>
         </div>
         <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-5 px-5">
-          <div class="min-w-[160px] bg-gradient-to-br from-slate-800 to-slate-900 p-5 rounded-[2rem] text-white flex flex-col justify-between h-40 shadow-xl">
+          <div class="min-w-40 bg-linear-to-br from-slate-800 to-slate-900 p-5 rounded-4xl text-white flex flex-col justify-between h-40 shadow-xl">
             <div class="bg-white/10 w-fit p-2 rounded-xl"><CreditCardIcon class="w-5 h-5 text-indigo-300" /></div>
             <div>
               <p class="text-[10px] text-slate-400 font-bold mb-1 italic">Kredivo</p>
               <p class="text-sm font-black">{{ formatIDR(1200000) }}</p>
             </div>
           </div>
-          <div class="min-w-[160px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 rounded-[2rem] flex flex-col justify-between h-40 shadow-sm">
+          <div class="min-w-40 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 rounded-4xl flex flex-col justify-between h-40 shadow-sm">
             <div class="bg-amber-50 dark:bg-amber-900/20 w-fit p-2 rounded-xl"><ClockIcon class="w-5 h-5 text-amber-600" /></div>
             <div>
               <p class="text-[10px] text-slate-400 font-bold mb-1 italic">Pinjam Teman</p>
               <p class="text-sm font-black text-slate-800 dark:text-slate-200">{{ formatIDR(2000000) }}</p>
             </div>
           </div>
-          <div class="min-w-[100px] flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2rem]">
+          <div class="min-w-25 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl">
              <PlusIcon class="w-6 h-6 text-slate-300" />
           </div>
         </div>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import { 
   PlusIcon,
   EllipsisVerticalIcon 
@@ -9,10 +7,9 @@ import {
   BanknotesIcon,
   CalendarDaysIcon 
 } from '@heroicons/vue/24/solid';
-
-const props = defineProps<{
-  loans: Array<any>
-}>();
+import { Head, Link } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('id-ID', {
@@ -21,6 +18,7 @@ const formatCurrency = (value: number) => {
     minimumFractionDigits: 0
   }).format(value);
 };
+
 </script>
 
 <template>

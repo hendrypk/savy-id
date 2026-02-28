@@ -14,6 +14,7 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered()
     {
+        $this->withoutExceptionHandling();
         $response = $this->get(route('login'));
 
         $response->assertOk();
@@ -90,6 +91,7 @@ class AuthenticationTest extends TestCase
         RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
 
         $response = $this->post(route('login.store'), [
+            'phone' => $user->phone,
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);

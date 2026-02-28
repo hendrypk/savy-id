@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
+import { Head, useForm } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Define types untuk form agar lebih type-safe
 interface LoanForm {

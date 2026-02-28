@@ -1,13 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
-import { 
-  HomeIcon as HomeSolid, 
-  ChartBarIcon as ChartSolid, 
-  CreditCardIcon as CreditSolid, 
-  UserIcon as UserSolid,
-  PlusIcon 
-} from '@heroicons/vue/24/solid';
 import { 
   HomeIcon as HomeOutline, 
   ChartBarIcon as ChartOutline, 
@@ -16,6 +7,14 @@ import {
   BellIcon, 
   BanknotesIcon
 } from '@heroicons/vue/24/outline';
+import { 
+  HomeIcon as HomeSolid, 
+  ChartBarIcon as ChartSolid, 
+  CreditCardIcon as CreditSolid, 
+  UserIcon as UserSolid,
+} from '@heroicons/vue/24/solid';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 defineProps<{
     title?: string;
