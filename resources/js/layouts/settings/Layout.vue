@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { 
     UserIcon, 
     KeyIcon, 
@@ -8,7 +6,9 @@ import {
     PaintBrushIcon,
     ChevronRightIcon 
 } from '@heroicons/vue/24/outline';
+import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Kita gunakan hardcoded URL atau helper yang sudah kamu punya
 // sesuai keinginanmu untuk menghindari crash Ziggy

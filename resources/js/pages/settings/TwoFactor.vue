@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { Form, Head, Link } from '@inertiajs/vue3';
 import { ShieldCheckIcon, ShieldExclamationIcon, ChevronLeftIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { onUnmounted, ref } from 'vue';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { route } from 'ziggy-js';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { disable, enable } from '@/routes/two-factor';
 
 type Props = {
@@ -47,7 +48,7 @@ onUnmounted(() => {
             </div>
 
             <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm overflow-hidden relative">
-                <LockClosedIcon class="absolute -right-4 -top-4 w-24 h-24 text-slate-50 dark:text-slate-800/50 -z-0" />
+                <LockClosedIcon class="absolute -right-4 -top-4 w-24 h-24 text-slate-50 dark:text-slate-800/50 z-0" />
 
                 <div class="relative z-10 space-y-5">
                     <div class="flex items-center justify-between">

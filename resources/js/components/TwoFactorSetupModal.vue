@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { CheckIcon, ClipboardDocumentIcon, QrCodeIcon } from '@heroicons/vue/24/outline';
 import { Form } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
-import { CheckIcon, ClipboardDocumentIcon, QrCodeIcon } from '@heroicons/vue/24/outline';
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
@@ -88,7 +88,7 @@ watch(() => isOpen.value, async (open) => {
 
 <template>
     <Dialog :open="isOpen" @update:open="isOpen = $event">
-        <DialogContent class="max-w-[90vw] sm:max-w-md rounded-[2rem] border-none bg-white dark:bg-slate-900 p-6 shadow-2xl">
+        <DialogContent class="max-w-[90vw] sm:max-w-md rounded-4xl border-none bg-white dark:bg-slate-900 p-6 shadow-2xl">
             
             <DialogHeader class="flex flex-col items-center">
                 <div class="mb-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl text-indigo-600">

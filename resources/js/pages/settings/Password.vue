@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { ChevronLeftIcon, KeyIcon } from '@heroicons/vue/24/outline';
 import { Form, Head, Link } from '@inertiajs/vue3';
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ChevronLeftIcon, KeyIcon } from '@heroicons/vue/24/outline';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Menghapus breadcrumbItems karena sudah menggunakan navigasi Back manual
 </script>

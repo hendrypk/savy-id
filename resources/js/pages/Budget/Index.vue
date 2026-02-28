@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import { 
   PlusIcon, 
   EllipsisVerticalIcon, 
   AdjustmentsHorizontalIcon 
 } from '@heroicons/vue/24/outline';
 import { WalletIcon } from '@heroicons/vue/24/solid';
+import { Head } from '@inertiajs/vue3';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
-const props = defineProps<{
-  categories: Array<any>
+interface Category {
+  uuid: string;
+  name: string;
+  type: string;
+  spent_amount: number;
+  remaining: number;
+  percentage: number;
+}
+
+defineProps<{
+  categories: Category[];
 }>();
 
 const formatCurrency = (value: number) => {
