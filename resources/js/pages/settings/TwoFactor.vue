@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { disable, enable } from '@/routes/two-factor';
+import { route } from 'ziggy-js';
 
 type Props = {
     requiresConfirmation?: boolean;
@@ -33,7 +34,7 @@ onUnmounted(() => {
 
     <UserMobileLayout 
         title="Keamanan 2FA"
-        back-route="settings.index"
+        :back-route="route('settings.index')"
     >
         <div class="space-y-6">
 

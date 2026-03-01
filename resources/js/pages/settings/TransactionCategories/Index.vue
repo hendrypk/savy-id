@@ -54,7 +54,7 @@ const deleteCategory = async (uuid: string) => {
 
     <UserMobileLayout
         title="Kategori"
-        back-route="settings.index"
+        :back-route="route('settings.index')"
     >
         <div class="space-y-8 pb-20">
             <div class="px-1">

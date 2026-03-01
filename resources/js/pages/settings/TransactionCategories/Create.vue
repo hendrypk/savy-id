@@ -69,7 +69,7 @@ const submit = () => {
 
     <UserMobileLayout 
         title="Kategori Baru"
-        back-route="transaction-categories.index"
+        :back-route="route('transaction-categories.index')"
     >
         <div class="space-y-8 pb-10">
             <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-6">

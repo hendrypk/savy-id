@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { route } from 'ziggy-js';
 
 // Kita tidak butuh breadcrumbItems lagi karena sudah pakai tombol Back manual
 </script>
@@ -11,7 +12,7 @@ import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
     <UserMobileLayout 
         title="Tampilan"
-        back-route="settings.index"
+        :back-route="route('settings.index')"
     >
         <div class="space-y-6">
 

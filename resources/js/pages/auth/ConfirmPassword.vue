@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { store } from '@/routes/password/confirm';
+import { route } from 'ziggy-js';
 </script>
 
 <template>
@@ -15,7 +16,7 @@ import { store } from '@/routes/password/confirm';
 
     <UserMobileLayout 
         title="Keamanan"
-        back-route="settings.index"
+        :back-route="route('settings.index')"
     >
         <div class="space-y-6">
 

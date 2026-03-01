@@ -91,4 +91,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Loan::class);
     }
+
+    /**
+     * Get all wallet owned by the user.
+     */
+    public function wallets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

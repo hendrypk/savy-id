@@ -41,7 +41,10 @@ const updatePassword = () => {
 <template>
     <Head title="Pengaturan Kata Sandi" />
 
-    <UserMobileLayout title="Keamanan" back-route="settings.index">
+    <UserMobileLayout 
+        title="Keamanan" 
+        :back-route="route('settings.index')"
+    >
         <div class="space-y-6">
             <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
                 <div class="flex flex-col items-center mb-8">
