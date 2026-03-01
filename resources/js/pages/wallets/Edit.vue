@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ChevronDownIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
 import { useForm, Head } from '@inertiajs/vue3';
-import { mobileToast } from '@/lib/swal';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { computed } from 'vue';
 import { route } from 'ziggy-js';
+import { Button } from '@/components/ui/button';
 import { 
     DropdownMenu, 
     DropdownMenuTrigger, 
     DropdownMenuContent, 
     DropdownMenuItem 
 } from '@/components/ui/dropdown-menu';
-import { ChevronDownIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { mobileToast } from '@/lib/swal';
 
 const props = defineProps<{ 
     wallet: any, // Wajib ada karena ini halaman edit
@@ -65,7 +65,7 @@ const submit = () => {
                                     <ChevronDownIcon class="w-4 h-4 text-slate-400" />
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent class="w-[var(--reka-dropdown-menu-trigger-width)] rounded-2xl p-2 bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-xl">
+                            <DropdownMenuContent class="w-(--reka-dropdown-menu-trigger-width) rounded-2xl p-2 bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-xl">
                                 <DropdownMenuItem v-for="type in types" :key="type.id" @click="form.type = type.id" class="rounded-xl font-bold">
                                     {{ type.name }}
                                 </DropdownMenuItem>

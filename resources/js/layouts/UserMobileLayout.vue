@@ -13,18 +13,21 @@ defineProps<{
 const page = usePage();
 const firstName = computed(() => page.props.auth?.user?.name?.split(' ')[0] || 'User');
 
-// 1. Definisikan State Aktif
+// 1. Definisikan State Aktif sesuai menu baru
 const isHome = computed(() => route().current('dashboard'));
 const isBudget = computed(() => route().current('budget.*'));
 const isWallet = computed(() => route().current('wallets.*'));
-const isLoans = computed(() => route().current('loans.*'));
-const isProfile = computed(() => route().current('settings.*') || route().current('profile.*'));
+const isSavings = computed(() => route().current('savings.*') || route().current('goals.*')); // Tombol Tengah
+const isLoans = computed(() => route().current('loans.*')); // Pengganti Setting
+
+// Logika kapan navigasi bawah muncul
 const showNav = computed(() => {
     return route().current('dashboard') || 
            route().current('budget.index') || 
            route().current('wallets.index') || 
            route().current('loans.index') || 
-           route().current('settings.index');
+           route().current('savings.index') ||
+           route().current('wealth.index');
 });
 
 // Helper class untuk animasi active
@@ -54,8 +57,8 @@ const inactiveClass = "text-slate-400 dark:text-slate-500 hover:text-slate-600";
                 :isHome="isHome" 
                 :isBudget="isBudget" 
                 :isWallet="isWallet" 
+                :isSavings="isSavings"
                 :isLoans="isLoans"
-                :isProfile="isProfile"
                 :activeClass="activeClass" 
                 :inactiveClass="inactiveClass"
             />
@@ -63,13 +66,3 @@ const inactiveClass = "text-slate-400 dark:text-slate-500 hover:text-slate-600";
         </div>
     </div>
 </template>
-
-<style scoped>
-main::-webkit-scrollbar {
-    display: none;
-}
-main {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-</style>

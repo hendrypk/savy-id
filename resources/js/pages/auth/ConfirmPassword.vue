@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ShieldCheckIcon } from '@heroicons/vue/24/outline';
 import { Form, Head } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { store } from '@/routes/password/confirm';
-import { route } from 'ziggy-js';
 </script>
 
 <template>

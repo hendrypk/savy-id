@@ -2,6 +2,7 @@
 import { ShieldCheckIcon, ShieldExclamationIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
 import { Form, Head } from '@inertiajs/vue3';
 import { onUnmounted, ref } from 'vue';
+import { route } from 'ziggy-js';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { disable, enable } from '@/routes/two-factor';
-import { route } from 'ziggy-js';
 
 type Props = {
     requiresConfirmation?: boolean;

@@ -1,22 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'; // Tambahkan computed
-import { Head, Link, router } from '@inertiajs/vue3';
 import { 
-    TrashIcon, 
-    PencilSquareIcon, 
     WalletIcon, 
     CreditCardIcon, 
     BanknotesIcon,
-    PlusIcon // Tambahkan PlusIcon
+    PlusIcon 
 } from '@heroicons/vue/24/outline';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { confirmDelete, mobileToast } from '@/lib/swal';
+import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { route } from 'ziggy-js';
-import { Button } from '@/components/ui/button';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 const props = defineProps<{ wallets: any[] }>();
 
-// Hitung total saldo dari semua dompet
 const totalBalance = computed(() => {
     return props.wallets.reduce((acc, wallet) => acc + Number(wallet.balance), 0);
 });
@@ -35,15 +30,6 @@ const getWalletIcon = (type: string) => {
     return WalletIcon;
 };
 
-const deleteWallet = async (uuid: string) => {
-    const result = await confirmDelete('Hapus Dompet?');
-    if (result.isConfirmed) {
-        router.delete(route('wallets.destroy', uuid), {
-            onSuccess: () => mobileToast('Dompet berhasil dihapus'),
-            preserveScroll: true
-        });
-    }
-};
 </script>
 
 <template>
@@ -66,7 +52,7 @@ const deleteWallet = async (uuid: string) => {
             </div>
 
             <div v-if="wallets.length > 0" class="flex justify-between items-center px-2">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Daftar Dompet ({{ wallets.length }})
                 </p>
             </div>
@@ -96,7 +82,7 @@ const deleteWallet = async (uuid: string) => {
                     </div>
 
                     <div class="mt-auto">
-                        <p class="text-lg font-black text-slate-900 dark:text-white tracking-[-0.05em] leading-tight break-words line-clamp-2">
+                        <p class="text-lg font-black text-slate-900 dark:text-white tracking-[-0.05em] leading-tight wrap-break-words line-clamp-2">
                             {{ formatCurrency(wallet.balance) }}
                         </p>
                     </div>

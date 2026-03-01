@@ -56,7 +56,10 @@ const menuItems = [
 </script>
 
 <template>
-    <UserMobileLayout title="Pengaturan">
+    <UserMobileLayout 
+        title="Pengaturan"
+        :back-route="route('dashboard')"
+    >
         <div class="space-y-6">
             <div>
                 <h3 class="px-1 text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Akun & Keamanan</h3>

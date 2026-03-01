@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { 
   HomeIcon as HomeOutline, ChartBarIcon as ChartOutline, 
-  WalletIcon as WalletOutline, Cog6ToothIcon as SettingsOutline, PlusIcon 
+  WalletIcon as WalletOutline, BanknotesIcon as LoansOutline, SparklesIcon as GoalsOutline 
 } from '@heroicons/vue/24/outline';
 import { 
   HomeIcon as HomeSolid, ChartBarIcon as ChartSolid, 
-  WalletIcon as WalletSolid, Cog6ToothIcon as SettingsSolid 
+  WalletIcon as WalletSolid, BanknotesIcon as LoansSolid, SparklesIcon as GoalssSolid 
 } from '@heroicons/vue/24/solid';
 import { Link } from '@inertiajs/vue3';
 
@@ -13,7 +13,8 @@ defineProps<{
     isHome: boolean;
     isBudget: boolean;
     isWallet: boolean;
-    isProfile: boolean;
+    isSavings: boolean; // Tombol Tengah
+    isLoans: boolean;   // Tombol Kanan
 }>();
 
 const getLinkStyles = (isActive: boolean) => [
@@ -47,11 +48,12 @@ const getLabelStyles = (isActive: boolean) => [
                 <span :class="getLabelStyles(isBudget)">Budget</span>
             </Link>
 
-            <Link href="/transactions/create" class="flex flex-col items-center flex-1 -mt-10 mb-1 transition-transform active:scale-90">
-                <div class="bg-linear-to-tr from-indigo-600 to-indigo-500 p-4 rounded-full shadow-lg border-[6px] border-slate-50 dark:border-slate-950">
-                    <PlusIcon class="w-6 h-6 text-white stroke-[3.5px]" />
+            <Link href="/saving" :class="getLinkStyles(isSavings)">
+                <div class="relative flex items-center justify-center h-6 w-6">
+                    <component :is="isSavings ? GoalssSolid : GoalsOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isSavings" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter text-indigo-600 dark:text-indigo-400">Catat</span>
+                <span :class="getLabelStyles(isSavings)">Golas</span>
             </Link>
 
             <Link href="/wallets" :class="getLinkStyles(isWallet)">
@@ -62,12 +64,12 @@ const getLabelStyles = (isActive: boolean) => [
                 <span :class="getLabelStyles(isWallet)">Wallet</span>
             </Link>
 
-            <Link href="/settings" :class="getLinkStyles(isProfile)">
+            <Link href="/loans" :class="getLinkStyles(isLoans)">
                 <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isProfile ? SettingsSolid : SettingsOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isProfile" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
+                    <component :is="isLoans ? LoansSolid : LoansOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isLoans" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span :class="getLabelStyles(isProfile)">Setting</span>
+                <span :class="getLabelStyles(isLoans)">Loans</span>
             </Link>
 
         </nav>

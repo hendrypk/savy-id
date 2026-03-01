@@ -1,0 +1,28 @@
+[90m= [39m[34;4mApp\Models\WalletTransaction[39;24m {#5607
+    [34muuid[39m: [34;4mRamsey\Uuid\Lazy\LazyUuidFromString[39;24m {#5616
+      [34muuid[39m: "[32mc8c62d20-a7de-40c1-8cf5-a0f51af47408[39m",
+    },
+    [34muser_id[39m: [35m1[39m,
+    [34mwallet_id[39m: [35m1[39m,
+    [34mamount[39m: [35m50000[39m,
+    [34mtype[39m: "[32mincome[39m",
+    [34mdescription[39m: "[32mTest Observer[39m",
+    [34mtransaction_date[39m: [34;4mCarbon\CarbonImmutable @1772401234[39;24m {#5611
+      [34mdate[39m: [36m2026-03-01 21:40:34.330329 UTC (+00:00)[39m,
+    },
+    [34mupdated_at[39m: "[32m2026-03-01 21:40:34[39m",
+    [34mcreated_at[39m: "[32m2026-03-01 21:40:34[39m",
+    [34mid[39m: [35m1[39m,
+    [34mwallet[39m: [34;4mApp\Models\Wallet[39;24m {#6672
+      [34mid[39m: [35m1[39m,
+      [34muuid[39m: "[32mff572045-894a-4ccb-9016-b41ade8ebd46[39m",
+      [34muser_id[39m: [35m1[39m,
+      [34mname[39m: "[32mDebit BCA[39m",
+      [34mtype[39m: "[32mbank[39m",
+      [34mbalance[39m: [33m50003.0[39m,
+      [34mcolor[39m: "[32m#e54848[39m",
+      [34mcreated_at[39m: "[32m2026-03-01 07:54:03[39m",
+      [34mupdated_at[39m: "[32m2026-03-01 12:11:09[39m",
+    },
+  }
+

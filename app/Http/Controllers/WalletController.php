@@ -11,8 +11,11 @@ class WalletController extends Controller
 {
     public function index()
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         return Inertia::render('wallets/Index', [
-            'wallets' => Auth::user()->wallets()->latest()->get()
+            'wallets' => $user->wallets()->latest()->get()
         ]);
     }
 
@@ -32,7 +35,10 @@ class WalletController extends Controller
             'color' => 'required|string',
         ]);
 
-        Auth::user()->wallets()->create($validated);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $user->wallets()->create($validated);
         return redirect()->route('wallets.index');
     }
 

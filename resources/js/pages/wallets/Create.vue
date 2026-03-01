@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { watch, computed } from 'vue';
+import { ChevronDownIcon } from '@heroicons/vue/24/outline';
 import { useForm, Head } from '@inertiajs/vue3';
-import { mobileToast } from '@/lib/swal';
+import { watch, computed } from 'vue';
+import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
+import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { route } from 'ziggy-js';
 
-import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
-import { ChevronDownIcon } from '@heroicons/vue/24/outline';
+import { mobileToast } from '@/lib/swal';
 
 // 1. Definisikan Props duluan
 const props = defineProps<{ 
@@ -93,7 +93,7 @@ const submit = () => {
                             </button>
                         </DropdownMenuTrigger>
 
-                        <DropdownMenuContent align="start" class="w-[var(--reka-dropdown-menu-trigger-width)] rounded-2xl p-2 shadow-xl border-slate-100 dark:border-slate-800">
+                        <DropdownMenuContent align="start" class="w-(--reka-dropdown-menu-trigger-width) rounded-2xl p-2 shadow-xl border-slate-100 dark:border-slate-800">
                             <DropdownMenuItem 
                                 v-for="type in types" 
                                 :key="type.id"

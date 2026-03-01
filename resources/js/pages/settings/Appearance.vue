@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import { route } from 'ziggy-js';
 
 // Kita tidak butuh breadcrumbItems lagi karena sudah pakai tombol Back manual
 </script>

@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
 import { 
-    ChevronLeftIcon, 
-    EllipsisHorizontalIcon, 
     ArrowUpIcon, 
     ArrowDownIcon,
     PlusIcon,
@@ -12,11 +9,12 @@ import {
     WalletIcon,
     PencilSquareIcon
 } from '@heroicons/vue/24/outline';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { Head, Link } from '@inertiajs/vue3';
 import { ArrowRightLeftIcon } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
-const props = defineProps<{
+defineProps<{
     wallet: any;
     transactions?: any[];
 }>();
@@ -99,7 +97,7 @@ const formatDate = (dateString: string) => {
 
                     <div class="py-2">
                         <p class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-1">Total Saldo</p>
-                        <p class="text-4xl font-black tracking-tighter leading-none break-words">
+                        <p class="text-4xl font-black tracking-tighter leading-none wrap-break-words">
                             {{ formatCurrency(wallet?.balance) }}
                         </p>
                     </div>
