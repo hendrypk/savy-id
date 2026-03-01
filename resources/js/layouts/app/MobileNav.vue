@@ -1,72 +1,73 @@
 <script setup lang="ts">
-import { PlusIcon } from '@heroicons/vue/24/outline';
 import { 
   HomeIcon as HomeOutline, ChartBarIcon as ChartOutline, 
-  WalletIcon as WalletOutline 
+  WalletIcon as WalletOutline, Cog6ToothIcon as SettingsOutline, PlusIcon 
 } from '@heroicons/vue/24/outline';
 import { 
   HomeIcon as HomeSolid, ChartBarIcon as ChartSolid, 
-  WalletIcon as WalletSolid 
+  WalletIcon as WalletSolid, Cog6ToothIcon as SettingsSolid 
 } from '@heroicons/vue/24/solid';
 import { Link } from '@inertiajs/vue3';
-import { Settings, Settings2Icon } from 'lucide-vue-next';
 
 defineProps<{
     isHome: boolean;
     isBudget: boolean;
     isWallet: boolean;
     isProfile: boolean;
-    activeClass: string;
-    inactiveClass: string;
 }>();
 
+const getLinkStyles = (isActive: boolean) => [
+    'flex flex-col items-center flex-1 transition-all duration-300',
+    isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
+];
+
+const getLabelStyles = (isActive: boolean) => [
+    'text-[9px] mt-1.5 font-black uppercase tracking-tighter transition-all duration-300',
+    isActive ? 'opacity-100' : 'opacity-40'
+];
 </script>
 
 <template>
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
-        <nav class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 px-2 py-3 rounded-[2.5rem] flex justify-between items-center shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-md z-50">
+        <nav class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 px-2 py-3 rounded-[2.5rem] flex justify-between items-end shadow-2xl">
             
-            <Link href="/dashboard" class="flex flex-col items-center flex-1 transition-all duration-300" :class="isHome ? activeClass : inactiveClass">
-                <div class="relative group">
-                    <HomeSolid v-if="isHome" class="w-6 h-6" />
-                    <HomeOutline v-else class="w-6 h-6 group-active:scale-90" />
-                    <div v-if="isHome" class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-600 rounded-full"></div>
+            <Link href="/dashboard" :class="getLinkStyles(isHome)">
+                <div class="relative flex items-center justify-center h-6 w-6">
+                    <component :is="isHome ? HomeSolid : HomeOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isHome" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span class="text-[9px] mt-1 font-extrabold uppercase tracking-tighter" :class="isHome ? 'opacity-100' : 'opacity-0'">Home</span>
+                <span :class="getLabelStyles(isHome)">Home</span>
             </Link>
 
-            <Link href="/budget" class="flex flex-col items-center flex-1 transition-all duration-300" :class="isBudget ? activeClass : inactiveClass">
-                <div class="relative group">
-                    <ChartSolid v-if="isBudget" class="w-6 h-6" />
-                    <ChartOutline v-else class="w-6 h-6 group-active:scale-90" />
-                    <div v-if="isBudget" class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-600 rounded-full"></div>
+            <Link href="/budget" :class="getLinkStyles(isBudget)">
+                <div class="relative flex items-center justify-center h-6 w-6">
+                    <component :is="isBudget ? ChartSolid : ChartOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isBudget" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span class="text-[9px] mt-1 font-extrabold uppercase tracking-tighter" :class="isBudget ? 'opacity-100' : 'opacity-0'">Budget</span>
+                <span :class="getLabelStyles(isBudget)">Budget</span>
             </Link>
 
-            <Link href="/transactions/create" class="flex flex-col items-center flex-1 -mt-14 transition-transform active:scale-90">
+            <Link href="/transactions/create" class="flex flex-col items-center flex-1 -mt-10 mb-1 transition-transform active:scale-90">
                 <div class="bg-linear-to-tr from-indigo-600 to-indigo-500 p-4 rounded-full shadow-lg border-[6px] border-slate-50 dark:border-slate-950">
-                    <PlusIcon class="w-7 h-7 text-white stroke-[3px]" />
+                    <PlusIcon class="w-6 h-6 text-white stroke-[3.5px]" />
                 </div>
-                <span class="text-[10px] mt-1 font-bold text-indigo-600 dark:text-indigo-400">Catat</span>
+                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter text-indigo-600 dark:text-indigo-400">Catat</span>
             </Link>
 
-            <Link href="/wallets" class="flex flex-col items-center flex-1 transition-all duration-300" :class="isWallet ? activeClass : inactiveClass">
-                <div class="relative group">
-                    <WalletSolid v-if="isWallet" class="w-6 h-6" />
-                    <WalletOutline v-else class="w-6 h-6 group-active:scale-90" />
-                    <div v-if="isWallet" class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-600 rounded-full"></div>
+            <Link href="/wallets" :class="getLinkStyles(isWallet)">
+                <div class="relative flex items-center justify-center h-6 w-6">
+                    <component :is="isWallet ? WalletSolid : WalletOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isWallet" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span class="text-[9px] mt-1 font-extrabold uppercase tracking-tighter" :class="isWallet ? 'opacity-100' : 'opacity-0'">Wallet</span>
+                <span :class="getLabelStyles(isWallet)">Wallet</span>
             </Link>
 
-            <Link href="/settings" class="flex flex-col items-center flex-1 transition-all duration-300" :class="isProfile ? activeClass : inactiveClass">
-                <div class="relative group">
-                    <Settings v-if="isProfile" class="w-6 h-6" />
-                    <Settings2Icon v-else class="w-6 h-6 group-active:scale-90" />
-                    <div v-if="isProfile" class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-600 rounded-full"></div>
+            <Link href="/settings" :class="getLinkStyles(isProfile)">
+                <div class="relative flex items-center justify-center h-6 w-6">
+                    <component :is="isProfile ? SettingsSolid : SettingsOutline" class="w-6 h-6 active:scale-90" />
+                    <div v-if="isProfile" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <span class="text-[9px] mt-1 font-extrabold uppercase tracking-tighter" :class="isProfile ? 'opacity-100' : 'opacity-0'">Setting</span>
+                <span :class="getLabelStyles(isProfile)">Setting</span>
             </Link>
 
         </nav>
