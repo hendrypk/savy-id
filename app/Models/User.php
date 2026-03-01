@@ -69,11 +69,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all budget categories created by the user.
+     * Get all transaction categories created by the user.
      */
-    public function budgetCategories(): HasMany
+    public function transactionCategories(): HasMany
     {
-        return $this->hasMany(BudgetCategory::class);
+        return $this->hasMany(TransactionCategory::class);
     }
 
     /**

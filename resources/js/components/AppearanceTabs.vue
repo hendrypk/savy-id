@@ -12,22 +12,25 @@ const tabs = [
 </script>
 
 <template>
-    <div
-        class="inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800"
-    >
-        <button
-            v-for="{ value, Icon, label } in tabs"
-            :key="value"
-            @click="updateAppearance(value)"
-            :class="[
-                'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
-                appearance === value
-                    ? 'bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
-                    : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-            ]"
+    <div class="space-y-3">
+        
+        <div
+            class="flex w-full gap-1.5 rounded-3xl bg-slate-100/80 p-1.5 dark:bg-slate-800/50 backdrop-blur-sm"
         >
-            <component :is="Icon" class="-ml-1 h-4 w-4" />
-            <span class="ml-1.5 text-sm">{{ label }}</span>
-        </button>
+            <button
+                v-for="{ value, Icon, label } in tabs"
+                :key="value"
+                @click="updateAppearance(value)"
+                :class="[
+                    'flex-1 flex items-center justify-center rounded-[1.2rem] py-3 transition-all duration-300',
+                    appearance === value
+                        ? 'bg-white text-indigo-600 shadow-lg shadow-slate-200 dark:bg-slate-700 dark:text-indigo-400 dark:shadow-none scale-[1.02]'
+                        : 'text-slate-500 active:scale-95 dark:text-slate-400',
+                ]"
+            >
+                <component :is="Icon" class="h-4 w-4" />
+                <span class="ml-2 text-xs font-bold">{{ label }}</span>
+            </button>
+        </div>
     </div>
 </template>

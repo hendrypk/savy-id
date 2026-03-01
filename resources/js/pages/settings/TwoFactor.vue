@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ShieldCheckIcon, ShieldExclamationIcon, ChevronLeftIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { ShieldCheckIcon, ShieldExclamationIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
+import { Form, Head } from '@inertiajs/vue3';
 import { onUnmounted, ref } from 'vue';
-import { route } from 'ziggy-js';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
@@ -32,20 +31,11 @@ onUnmounted(() => {
 <template>
     <Head title="Keamanan 2FA" />
 
-    <UserMobileLayout title="Keamanan">
+    <UserMobileLayout 
+        title="Keamanan 2FA"
+        back-route="settings.index"
+    >
         <div class="space-y-6">
-            <div class="flex items-center gap-4">
-                <Link 
-                    :href="route('settings.index')" 
-                    class="p-2 -ml-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 active:scale-90 transition-transform shadow-sm"
-                >
-                    <ChevronLeftIcon class="w-5 h-5 stroke-[2.5]" />
-                </Link>
-                <div>
-                    <h2 class="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">Otentikasi 2 Faktor</h2>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Proteksi ekstra untuk akun Anda</p>
-                </div>
-            </div>
 
             <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm overflow-hidden relative">
                 <LockClosedIcon class="absolute -right-4 -top-4 w-24 h-24 text-slate-50 dark:text-slate-800/50 z-0" />

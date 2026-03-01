@@ -5,7 +5,8 @@ import {
     ShieldCheckIcon, 
     PaintBrushIcon,
     ChevronRightIcon,
-    ArrowLeftOnRectangleIcon
+    ArrowLeftOnRectangleIcon,
+    TagIcon,
 } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
@@ -43,6 +44,13 @@ const menuItems = [
         icon: PaintBrushIcon,
         color: 'text-purple-600',
         bg: 'bg-purple-50'
+    },
+    {
+        title: 'Transaction Category',
+        href: route('transaction-categories.index'),
+        icon: TagIcon,
+        color: 'text-emerald-600',
+        bg: 'bg-emerald-50'
     },
 ];
 </script>

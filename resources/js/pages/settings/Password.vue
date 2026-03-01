@@ -1,118 +1,107 @@
 <script setup lang="ts">
-import { ChevronLeftIcon, KeyIcon } from '@heroicons/vue/24/outline';
-import { Form, Head, Link } from '@inertiajs/vue3';
-import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
+import { KeyIcon } from '@heroicons/vue/24/outline';
+import { useForm, Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { route } from 'ziggy-js';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { mobileToast } from '@/lib/swal'; // Helper toast estetik kita
 
-// Menghapus breadcrumbItems karena sudah menggunakan navigasi Back manual
+const form = useForm({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const isFormValid = computed(() => {
+    return form.current_password.length > 0 && 
+           form.password.length >= 8 && 
+           form.password_confirmation.length >= 8;
+});
+
+const updatePassword = () => {
+    form.put(route('user-password.update'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            mobileToast('Kata sandi diperbarui!', 'success');
+            form.reset();
+        },
+
+        onError: () => {
+            mobileToast('Kata sandi Gagal diperbarui!', 'error');
+        },
+    });
+};
+
 </script>
 
 <template>
     <Head title="Pengaturan Kata Sandi" />
 
-    <UserMobileLayout title="Keamanan">
+    <UserMobileLayout title="Keamanan" back-route="settings.index">
         <div class="space-y-6">
-            <div class="flex items-center gap-4">
-                <Link 
-                    :href="route('settings.index')" 
-                    class="p-2 -ml-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 active:scale-90 transition-transform shadow-sm"
-                >
-                    <ChevronLeftIcon class="w-5 h-5 stroke-[2.5]" />
-                </Link>
-                <div>
-                    <h2 class="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">Ganti Kata Sandi</h2>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Jaga keamanan akun Anda tetap kuat</p>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
-                <div class="flex flex-col items-center mb-6">
-                    <div class="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-2xl text-amber-500">
+            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+                <div class="flex flex-col items-center mb-8">
+                    <div class="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-4xl text-indigo-500">
                         <KeyIcon class="w-8 h-8" />
                     </div>
                 </div>
 
-                <Form
-                    v-bind="PasswordController.update.form()"
-                    :options="{
-                        preserveScroll: true,
-                    }"
-                    reset-on-success
-                    :reset-on-error="[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]"
-                    class="space-y-5"
-                    v-slot="{ errors, processing, recentlySuccessful }"
-                >
+                <form @submit.prevent="updatePassword" class="space-y-5">
                     <div class="space-y-2">
-                        <Label for="current_password" class="text-[11px] font-black uppercase text-slate-400 ml-1">Kata Sandi Saat Ini</Label>
+                        <Label for="current_password" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Sandi Saat Ini</Label>
                         <Input
                             id="current_password"
-                            name="current_password"
+                            v-model="form.current_password"
                             type="password"
-                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none transition-all"
-                            autocomplete="current-password"
+                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none"
                             placeholder="••••••••"
                         />
-                        <InputError :message="errors.current_password" />
+                        <InputError :message="form.errors.current_password" />
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="password" class="text-[11px] font-black uppercase text-slate-400 ml-1">Kata Sandi Baru</Label>
+                        <Label for="password" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Sandi Baru</Label>
                         <Input
                             id="password"
-                            name="password"
+                            v-model="form.password"
                             type="password"
-                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none transition-all"
-                            autocomplete="new-password"
+                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none"
                             placeholder="Minimal 8 karakter"
                         />
-                        <InputError :message="errors.password" />
+                        <InputError :message="form.errors.password" />
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="password_confirmation" class="text-[11px] font-black uppercase text-slate-400 ml-1">Konfirmasi Kata Sandi Baru</Label>
+                        <Label for="password_confirmation" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Konfirmasi Sandi</Label>
                         <Input
                             id="password_confirmation"
-                            name="password_confirmation"
+                            v-model="form.password_confirmation"
                             type="password"
-                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none transition-all"
-                            autocomplete="new-password"
-                            placeholder="Ulangi kata sandi baru"
+                            class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none"
+                            placeholder="Ulangi sandi baru"
                         />
-                        <InputError :message="errors.password_confirmation" />
+                        <InputError :message="form.errors.password_confirmation" />
                     </div>
 
-                    <div class="pt-4 flex flex-col gap-4">
+                    <div class="pt-4">
                         <Button
-                            :disabled="processing"
-                            class="w-full h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-100 dark:shadow-none transition-all active:scale-95"
+                            :disabled="form.processing || !isFormValid"
+                            variant="purple"
+                            class="w-full h-12 shadow-lg shadow-indigo-100 dark:shadow-none active:scale-95 transition-all disabled:opacity-50 disabled:grayscale-[0.5]"
                         >
-                            {{ processing ? 'Memproses...' : 'Simpan Kata Sandi' }}
+                            {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                         </Button>
-
-                        <Transition
-                            enter-active-class="transition ease-out duration-300"
-                            enter-from-class="opacity-0 translate-y-2"
-                            enter-to-class="opacity-100 translate-y-0"
-                        >
-                            <p v-show="recentlySuccessful" class="text-center text-xs font-bold text-green-600">
-                                Kata sandi berhasil diperbarui! 🔒
-                            </p>
-                        </Transition>
                     </div>
-                </Form>
+                </form>
             </div>
 
-            <div class="px-2">
-                <p class="text-[10px] text-slate-400 font-medium leading-relaxed">
-                    Gunakan kombinasi huruf, angka, dan simbol untuk memastikan keamanan akun Anda tetap maksimal.
+            <div class="px-4 text-center">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
+                    Keamanan adalah prioritas. Gunakan kombinasi sandi yang kuat.
                 </p>
             </div>
         </div>

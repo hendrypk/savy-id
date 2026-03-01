@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
@@ -10,20 +9,11 @@ import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 <template>
     <Head title="Pengaturan Tampilan" />
 
-    <UserMobileLayout title="Tampilan">
+    <UserMobileLayout 
+        title="Tampilan"
+        back-route="settings.index"
+    >
         <div class="space-y-6">
-            <div class="flex items-center gap-4 mb-2">
-                <Link 
-                    :href="route('settings.index')" 
-                    class="p-2 -ml-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 active:scale-90 transition-transform shadow-sm"
-                >
-                    <ChevronLeftIcon class="w-5 h-5 stroke-[2.5]" />
-                </Link>
-                <div>
-                    <h2 class="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">Mode Tampilan</h2>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sesuaikan kenyamanan mata Anda</p>
-                </div>
-            </div>
 
             <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
                 <div class="space-y-4">

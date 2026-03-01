@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\TransactionCategoryController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -10,7 +11,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings', function () {
         return Inertia::render('settings/Index');
     })->name('settings.index');
-    // Route::redirect('settings', '/settings/profile');
+    Route::resource('settings/transaction-categories', TransactionCategoryController::class);
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');

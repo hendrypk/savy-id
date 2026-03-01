@@ -4,14 +4,14 @@ import {
     KeyIcon, 
     ShieldCheckIcon, 
     PaintBrushIcon,
-    ChevronRightIcon 
+    ChevronRightIcon, 
+    ListBulletIcon,
+    TagIcon
 } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
-// Kita gunakan hardcoded URL atau helper yang sudah kamu punya
-// sesuai keinginanmu untuk menghindari crash Ziggy
 const sidebarNavItems = [
     {
         title: 'Profile',
@@ -40,6 +40,20 @@ const sidebarNavItems = [
         icon: PaintBrushIcon,
         color: 'text-purple-600',
         bg: 'bg-purple-50'
+    },
+    {
+        title: 'Budget Category',
+        href: '#', // Ganti sementara dengan '#' untuk testing jika rute belum ada
+        icon: TagIcon,
+        color: 'text-rose-600',
+        bg: 'bg-rose-50'
+    },
+    {
+        title: 'Transaction Category',
+        href: '#',
+        icon: ListBulletIcon,
+        color: 'text-emerald-600',
+        bg: 'bg-emerald-50'
     },
 ];
 </script>

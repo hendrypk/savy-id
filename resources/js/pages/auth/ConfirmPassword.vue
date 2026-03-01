@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ShieldCheckIcon, ChevronLeftIcon } from '@heroicons/vue/24/outline';
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,20 +13,11 @@ import { store } from '@/routes/password/confirm';
 <template>
     <Head title="Konfirmasi Keamanan" />
 
-    <UserMobileLayout title="Keamanan">
+    <UserMobileLayout 
+        title="Keamanan"
+        back-route="settings.index"
+    >
         <div class="space-y-6">
-            <div class="flex items-center gap-4">
-                <Link 
-                    :href="route('settings.index')" 
-                    class="p-2 -ml-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 active:scale-90 transition-transform shadow-sm"
-                >
-                    <ChevronLeftIcon class="w-5 h-5 stroke-[2.5]" />
-                </Link>
-                <div>
-                    <h2 class="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">Konfirmasi Sandi</h2>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Verifikasi identitas diperlukan</p>
-                </div>
-            </div>
 
             <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
                 <div class="flex flex-col items-center mb-8">

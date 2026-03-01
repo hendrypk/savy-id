@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import { 
-  PlusIcon,
-  EllipsisVerticalIcon 
+  PlusIcon, 
+  BanknotesIcon, 
 } from '@heroicons/vue/24/outline';
-import { 
-  BanknotesIcon,
-  CalendarDaysIcon 
-} from '@heroicons/vue/24/solid';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
+import { CalendarDaysIcon, EllipsisVerticalIcon, Link } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+
+// Sesuaikan interface ini dengan field yang kamu pakai di template
+interface Loan {
+    uuid: string;              // Gunakan uuid sesuai error line 69
+    name: string;              // Gunakan name sesuai error line 82
+    amount: number;
+    remaining_amount: number;
+    monthly_installment: number; // Tambahkan ini (line 56 & 123)
+    tenor: number | string;      // Tambahkan ini (line 104)
+    progress: number;            // Tambahkan ini (line 112)
+    status: string;              // Tambahkan ini (line 85)
+    due_date?: string;
+}
+
+defineProps<{
+    loans: Loan[];
+}>();
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('id-ID', {
@@ -18,7 +32,6 @@ const formatCurrency = (value: number) => {
     minimumFractionDigits: 0
   }).format(value);
 };
-
 </script>
 
 <template>
@@ -114,13 +127,13 @@ const formatCurrency = (value: number) => {
         </div>
 
         <!-- Add Loan Button -->
-<Link 
-  :href="route('loans.create')"
-  class="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-400 hover:bg-slate-50 transition-colors"
->
-  <PlusIcon class="w-5 h-5" />
-  <span class="text-sm font-bold">Tambah Pinjaman</span>
-</Link>
+        <Link 
+          :href="route('loans.create')"
+          class="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-400 hover:bg-slate-50 transition-colors"
+        >
+          <PlusIcon class="w-5 h-5" />
+          <span class="text-sm font-bold">Tambah Pinjaman</span>
+        </Link>
 
       </div>
     </div>

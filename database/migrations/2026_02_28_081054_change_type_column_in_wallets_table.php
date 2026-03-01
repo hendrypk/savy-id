@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('budget_categories', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->unique()->index(); 
-            $table->string('name');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->enum('type', ['cash', 'bank', 'kartu kredit', 'e wallet'])
+                  ->default('cash')
+                  ->change();
         });
     }
 
@@ -25,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('budget_categories');
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->string('type')->default('cash')->change();
+        });
     }
 };

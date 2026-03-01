@@ -10,7 +10,7 @@ class BudgetController extends Controller
     public function index()
     {
         return Inertia::render('Budget/Index', [
-            'categories' => auth()->user()->budgetCategories()
+            'categories' => auth()->user()->transactionCategories()
                 ->with(['allocations' => function($query) {
                     $query->where('month_year', now()->format('Y-m'));
                 }])
