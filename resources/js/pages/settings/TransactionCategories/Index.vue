@@ -8,25 +8,24 @@ import {
     ArrowUpCircleIcon 
 } from '@heroicons/vue/24/outline';
 import { Head, Link, router } from '@inertiajs/vue3';
+import axios from 'axios';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
 import Fab from '@/components/ui/button/Fab.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { confirmDelete, mobileToast } from '@/lib/swal';
 
-// 1. Updated Interface to include uuid
-interface Category {
-    id: number;
-    uuid: string;
-    name: string;
-    type: 'income' | 'expense';
-    icon: string;
-    color: string;
-    is_system: string;
-}
-
 defineProps<{
-    categories: Category[];
+    categories: {
+        data: Array<{
+            uuid: string;
+            name: string;
+            type: 'income' | 'expense';
+            icon: string;
+            color: string;
+            is_system: boolean;
+        }>
+    }
 }>();
 
 // 2. Dynamic Icon Helper
@@ -37,15 +36,20 @@ const getIcon = (iconName: string) => {
 // 3. Delete using UUID
 const deleteCategory = async (uuid: string) => {
     const result = await confirmDelete('Hapus Kategori?');
+    
     if (result.isConfirmed) {
-    router.delete(route('transaction-categories.destroy', uuid), {
-            onSuccess: () => {
-                mobileToast('Kategori berhasil dihapus');
-            },
-            onFinish: () => {
-            },
-            preserveScroll: true 
-        });
+        try {
+            await axios.delete(route('api.transaction-categories.destroy', uuid));
+            
+            mobileToast('Kategori berhasil dihapus', 'success');
+            
+            router.reload({ only: ['categories'] });
+            
+        } catch (error: any) {
+            const message = error.response?.data?.message || 'Gagal menghapus kategori';
+            mobileToast(message, 'error');
+            console.error('Delete error:', error.response?.data);
+        }
     }
 };
 </script>
@@ -60,12 +64,12 @@ const deleteCategory = async (uuid: string) => {
         <div class="space-y-8 pb-20">
             <div class="px-1">
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-                    {{ categories.length }} Total Tersimpan
+                    {{ categories.data.length }} Total Tersimpan
                 </p>
             </div>
 
             <div class="space-y-4">
-                <div v-for="category in categories" :key="category.uuid" 
+                <div v-for="category in categories.data" :key="category.uuid" 
                     class="relative overflow-hidden bg-white dark:bg-slate-900 p-5 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
                 >
                     <div class="absolute -left-4 -top-4 w-20 h-20 opacity-[0.05] rounded-full" :style="{ backgroundColor: category.color }"></div>

@@ -12,15 +12,17 @@ import {
     TruckIcon, 
     CreditCardIcon
 } from '@heroicons/vue/24/outline';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
+import axios from 'axios';
+import { ref } from 'vue';
 import { route } from 'ziggy-js';
+
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { mobileToast } from '@/lib/swal';
-// Menggunakan Heroicons 24 Outline
 
 const availableIcons = [
     { name: 'TagIcon', component: TagIcon },
@@ -33,34 +35,54 @@ const availableIcons = [
     { name: 'CreditCardIcon', component: CreditCardIcon },
 ];
 
-const getSelectedIcon = () => {
-    return availableIcons.find(i => i.name === form.icon)?.component || TagIcon;
-};
-
 const presetColors = [
     '#4f46e5', '#f43f5e', '#10b981', '#f59e0b', 
     '#8b5cf6', '#ec4899', '#06b6d4', '#475569'
 ];
 
-const form = useForm({
+// --- STATE ---
+const form = ref({
     name: '',
     type: 'expense' as 'income' | 'expense',
     color: '#4f46e5',
     icon: 'TagIcon',
 });
 
-const submit = () => {
-    form.post(route('transaction-categories.store'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            mobileToast('Kategori berhasil dibuat', 'success');
-            form.reset();
-        },
+// Use Record<string, string[]> because Laravel returns arrays of errors per key
+const errors = ref<Record<string, string[]>>({});
+const processing = ref(false);
 
-        onError: () => {
-            mobileToast('Gagal membuat kategori', 'error');
-        },
-    });
+// --- HELPERS ---
+const getSelectedIcon = () => {
+    return availableIcons.find(i => i.name === form.value.icon)?.component || TagIcon;
+};
+
+// --- METHODS ---
+const submit = async () => {
+    processing.value = true;
+    errors.value = {};
+
+    try {
+        // Calling the API route defined in routes/api.php
+        await axios.post(route('api.transaction-categories.store'), form.value);
+        
+        mobileToast('Kategori berhasil dibuat', 'success');
+        
+        // Redirect back to index using Inertia
+        router.visit(route('transaction-categories.index'));
+        } catch (error: any) {
+            console.error(error.response?.data); // TAMBAHKAN INI untuk melihat detail error di console
+            if (error.response?.status === 422) {
+                errors.value = error.response.data.errors;
+                mobileToast('Periksa kembali inputan Anda', 'error');
+            } else {
+                // Tampilkan pesan error spesifik dari server jika ada
+                const message = error.response?.data?.message || 'Terjadi kesalahan pada server';
+                mobileToast(message, 'error');
+            }
+        } finally {
+        processing.value = false;
+    }
 };
 </script>
 
@@ -72,7 +94,7 @@ const submit = () => {
         :back-route="route('transaction-categories.index')"
     >
         <div class="space-y-8 pb-10">
-            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-6">
+            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
                 <form @submit.prevent="submit" class="space-y-7">
                     
                     <div class="flex flex-col items-center justify-center p-6 rounded-4xl border-2 border-dashed border-slate-100 dark:border-slate-800 mb-2">
@@ -99,9 +121,8 @@ const submit = () => {
                             v-model="form.name"
                             class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none transition-all"
                             placeholder="Misal: Makan Siang, Gaji..."
-                            required
                         />
-                        <InputError :message="form.errors.name" />
+                        <InputError :message="errors.name ? errors.name[0] : ''" />
                     </div>
 
                     <div class="space-y-2">
@@ -174,9 +195,10 @@ const submit = () => {
                         <Button 
                             type="submit" 
                             variant="purple" 
-                            :disabled="form.processing"
+                            class="w-full"
+                            :disabled="processing"
                         >
-                            {{ form.processing ? 'Menyimpan...' : 'Simpan Kategori' }}
+                            {{ processing ? 'Menyimpan...' : 'Simpan Kategori' }}
                         </Button>
                     </div>
                 </form>

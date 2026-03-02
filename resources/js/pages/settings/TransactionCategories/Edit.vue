@@ -12,8 +12,11 @@ import {
     TruckIcon, 
     CreditCardIcon
 } from '@heroicons/vue/24/outline';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
+import axios from 'axios';
+import { ref } from 'vue';
 import { route } from 'ziggy-js';
+
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,13 +24,15 @@ import { Label } from '@/components/ui/label';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { mobileToast } from '@/lib/swal';
 
-// Define the shape of the category prop
+// Sesuaikan interface dengan struktur Laravel Resource (ada properti .data)
 interface Category {
-    uuid: string;
-    name: string;
-    type: 'income' | 'expense';
-    color: string;
-    icon: string;
+    data: {
+        uuid: string;
+        name: string;
+        type: 'income' | 'expense';
+        color: string;
+        icon: string;
+    }
 }
 
 const props = defineProps<{
@@ -45,36 +50,56 @@ const availableIcons = [
     { name: 'CreditCardIcon', component: CreditCardIcon },
 ];
 
-const getSelectedIcon = () => {
-    return availableIcons.find(i => i.name === form.icon)?.component || TagIcon;
-};
-
 const presetColors = [
     '#4f46e5', '#f43f5e', '#10b981', '#f59e0b', 
     '#8b5cf6', '#ec4899', '#06b6d4', '#475569'
 ];
 
-// Initialize form with existing category data
-const form = useForm({
-    name: props.category.name,
-    type: props.category.type,
-    color: props.category.color,
-    icon: props.category.icon || 'TagIcon',
+// --- STATE ---
+// Ambil nilai awal dari props.category.data
+const form = ref({
+    name: props.category.data.name,
+    type: props.category.data.type,
+    color: props.category.data.color,
+    icon: props.category.data.icon || 'TagIcon',
 });
 
-const submit = () => {
-    // Use put/patch for updates
-    form.patch(route('transaction-categories.update', props.category.uuid), {
-        preserveScroll: true,
-        onSuccess: () => {
-            mobileToast('Kategori berhasil diubah', 'success');
-            form.reset();
-        },
+const errors = ref<Record<string, string[]>>({});
+const processing = ref(false);
 
-        onError: () => {
-            mobileToast('Gagal mengubah kategori', 'error');
-        },
-    });
+// --- HELPERS ---
+const getSelectedIcon = () => {
+    return availableIcons.find(i => i.name === form.value.icon)?.component || TagIcon;
+};
+
+// --- METHODS ---
+const submit = async () => {
+    processing.value = true;
+    errors.value = {};
+
+    try {
+        // Panggil route API update (PATCH)
+        await axios.patch(
+            route('api.transaction-categories.update', props.category.data.uuid), 
+            form.value
+        );
+        
+        mobileToast('Kategori berhasil diperbarui', 'success');
+        
+        // Kembali ke halaman index
+        router.visit(route('transaction-categories.index'));
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            errors.value = error.response.data.errors;
+            mobileToast('Periksa kembali inputan Anda', 'error');
+        } else {
+            // Cek log jika 500 terjadi lagi
+            console.error(error.response?.data);
+            mobileToast('Gagal memperbarui kategori', 'error');
+        }
+    } finally {
+        processing.value = false;
+    }
 };
 </script>
 
@@ -112,10 +137,9 @@ const submit = () => {
                             id="name"
                             v-model="form.name"
                             class="h-12 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 focus:ring-indigo-500 shadow-none transition-all"
-                            placeholder="Misal: Makan Siang, Gaji..."
-                            required
+                            placeholder="Misal: Makan Siang..."
                         />
-                        <InputError :message="form.errors.name" />
+                        <InputError :message="errors.name ? errors.name[0] : ''" />
                     </div>
 
                     <div class="space-y-2">
@@ -188,10 +212,10 @@ const submit = () => {
                         <Button 
                             type="submit" 
                             variant="purple" 
-                            class="w-full"
-                            :disabled="form.processing"
+                            class="w-full h-14 rounded-2xl font-bold text-lg"
+                            :disabled="processing"
                         >
-                            {{ form.processing ? 'Menyimpan...' : 'Perbarui Kategori' }}
+                            {{ processing ? 'Memperbarui...' : 'Perbarui Kategori' }}
                         </Button>
                     </div>
                 </form>

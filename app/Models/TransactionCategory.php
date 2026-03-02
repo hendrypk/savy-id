@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class TransactionCategory extends Model
 {
-    use HasFactory, SoftDeletes; // Removed HasUuids
+    use HasFactory, SoftDeletes, BelongsToUser;
 
     protected $fillable = [
         'user_id',
@@ -67,4 +68,6 @@ class TransactionCategory extends Model
         // Pastikan nama model 'BudgetAllocation' sesuai dengan file kamu
         return $this->hasMany(BudgetAllocation::class, 'transaction_category_id');
     }
+
+    
 }
