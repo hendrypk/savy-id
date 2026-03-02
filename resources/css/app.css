@@ -170,3 +170,25 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Mencegah highlight biru saat klik di mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Mencegah seleksi teks kecuali pada input */
+body {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+/* Scroll halus seperti native */
+.overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+}
