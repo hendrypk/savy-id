@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ChevronDownIcon, BanknotesIcon, CalendarDaysIcon, TagIcon } from '@heroicons/vue/24/outline';
-import { useForm, Head } from '@inertiajs/vue3';
+import { useForm, Head, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
-import { mobileToast } from '@/lib/swal';
+import { confirmDelete, mobileToast } from '@/lib/swal';
 
 // 1. Props: Receives existing budget data and category list
 const props = defineProps<{ 
@@ -40,6 +40,21 @@ const submit = () => {
         },
     });
 };
+
+const deleteBudget = async (uuid: string) => {
+    const result = await confirmDelete('Hapus Kategori?');
+    if (result.isConfirmed) {
+    router.delete(route('budget.destroy', uuid), {
+            onSuccess: () => {
+                mobileToast('Kategori berhasil dihapus');
+            },
+            onFinish: () => {
+            },
+            preserveScroll: true 
+        });
+    }
+};
+
 </script>
 
 <template>
@@ -101,16 +116,26 @@ const submit = () => {
                     />
                 </div>
 
-                <div class="pt-4">
+                <div class="pt-4 space-y-2">
                     <Button 
                         :disabled="form.processing" 
                         variant="purple" 
+                        class="w-full h-14 text-lg"
                     >
                         {{ form.processing ? 'Menyimpan...' : 'Update Anggaran' }}
                     </Button>
+
                 </div>
             </form>
         </div>
+
+            <Button 
+                variant="ghost"
+                            @click="deleteBudget(budget.uuid)" 
+                :disabled="form.processing"
+            >
+                Hapus Anggaran
+            </Button>
     </UserMobileLayout>
 </template>
 

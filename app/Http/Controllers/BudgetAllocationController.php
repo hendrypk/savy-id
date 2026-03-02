@@ -6,9 +6,11 @@ use App\Http\Requests\BudgetAllocations\UpdateBudgetAllocationRequest;
 use App\Http\Requests\StoreBudgetAllocationRequest;
 use App\Models\BudgetAllocation;
 use App\Models\TransactionCategory;
+use App\Models\WalletTransaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -153,5 +155,26 @@ class BudgetAllocationController extends Controller
             ],
             'transactions' => $transactions
         ]);
+    }
+
+    public function destroy($uuid): RedirectResponse
+    {
+        // 1. Find the budget by UUID
+        $budget = BudgetAllocation::where('uuid', $uuid)->firstOrFail();
+
+        // 2. Validation: Check if transactions exist for this specific budget ID
+        $hasTransactions = WalletTransaction::where('budget_allocation_id', $budget->id)->exists();
+
+        if ($hasTransactions) {
+            // Return with an error message that Inertia's onError will catch
+            return Redirect::back()->withErrors([
+                'delete' => 'Cannot delete budget: There are existing transactions linked to this allocation.'
+            ]);
+        }
+
+        // 3. Perform the deletion
+        $budget->delete();
+
+        return Redirect::route('budget.index')->with('success', 'Budget deleted successfully.');
     }
 }
