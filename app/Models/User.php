@@ -129,8 +129,12 @@ class User extends Authenticatable
      */
     public function totalSavings(): float
     {
-return (float) $this->savings()->sum('current_amount');
+        return (float) $this->savings()->sum('current_amount');
+    }
 
+    public function savings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Saving::class);
     }
 
     /**
