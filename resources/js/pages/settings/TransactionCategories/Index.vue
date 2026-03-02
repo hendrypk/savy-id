@@ -124,8 +124,8 @@ const deleteCategory = async (uuid: string) => {
                 <p class="text-xs text-slate-400 mt-2 max-w-50 text-center font-bold uppercase tracking-wider leading-relaxed">
                     Atur kategori pengeluaranmu agar keuangan lebih tertata.
                 </p>
-                <Link :href="route('transaction-categories.create')" class="mt-8 block w-full">
-                    <Button variant="purple" class="rounded-full w-full h-12 shadow-lg shadow-indigo-100 dark:shadow-none">
+                <Link :href="route('transaction-categories.create')" class="mt-8 block justify-center w-auto">
+                    <Button variant="purple" class="rounded-full h-12 shadow-lg shadow-indigo-100 dark:shadow-none">
                         Buat Kategori Baru
                     </Button>
                 </Link>

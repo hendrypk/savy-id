@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
       <div class="relative group">
         <div 
           :class="cn(
-            'absolute inset-0 blur-2xl opacity-40 group-active:opacity-20 transition-opacity rounded-full',
+            'absolute opacity-40 group-active:opacity-20 transition-opacity rounded-full',
             variant === 'purple' ? 'bg-indigo-500' : 'bg-slate-400'
           )"
         ></div>
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
     </Link>
 
     <div v-else class="relative group">
-       <div :class="cn('absolute inset-0 blur-2xl opacity-40 rounded-full', variant === 'purple' ? 'bg-indigo-500' : 'bg-slate-400')"></div>
+       <div :class="cn('absolute opacity-40 rounded-full', variant === 'purple' ? 'bg-indigo-500' : 'bg-slate-400')"></div>
        <Button
           :variant="variant"
           class="relative h-16 w-16 p-0 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all duration-200"

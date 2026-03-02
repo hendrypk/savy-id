@@ -36,10 +36,9 @@ const inactiveClass = "text-slate-400 dark:text-slate-500 hover:text-slate-600";
 </script>
 
 <template>
-    <div class="min-h-screen w-full bg-white dark:bg-slate-900 font-sans antialiased text-slate-900 dark:text-slate-100">
-        
+    <div class="fixed inset-0 bg-white dark:bg-slate-900 -z-10"></div>
+    <div class="min-h-screen w-full font-sans antialiased text-slate-900 dark:text-slate-100 relative">
         <div class="flex flex-col min-h-screen w-full relative">
-
             <MobileHeader 
                 :title="title" 
                 :firstName="firstName" 

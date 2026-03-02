@@ -99,4 +99,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Wallet::class);
     }
+
+    /**
+     * Get all budget allocation owned by the user.
+     */
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(BudgetAllocation::class);
+    }
 }

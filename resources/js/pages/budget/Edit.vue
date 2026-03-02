@@ -42,11 +42,11 @@ const submit = () => {
 };
 
 const deleteBudget = async (uuid: string) => {
-    const result = await confirmDelete('Hapus Kategori?');
+    const result = await confirmDelete('Hapus Anggaran?');
     if (result.isConfirmed) {
     router.delete(route('budget.destroy', uuid), {
             onSuccess: () => {
-                mobileToast('Kategori berhasil dihapus');
+                mobileToast('Anggaran berhasil dihapus');
             },
             onFinish: () => {
             },

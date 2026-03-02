@@ -29,8 +29,8 @@ const getLabelStyles = (isActive: boolean) => [
 </script>
 
 <template>
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-md z-50">
-        <nav class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 px-2 py-3 rounded-[2.5rem] flex justify-between items-end shadow-2xl">
+    <div class="fixed bottom-3 p-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md z-50">
+        <nav class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-indigo-800/50 dark:border-indigo-800 px-2 py-3 rounded-[2.5rem] flex justify-between items-end shadow-2xl">
             
             <Link href="/" :class="getLinkStyles(isHome)">
                 <div class="relative flex items-center justify-center h-6 w-6">

@@ -103,7 +103,7 @@ export const mobileToast = (
       </div>
     `,
     toast: true,
-    position: 'bottom',
+    position: 'top',
     showConfirmButton: false,
     timer: 2200,
     background: isDark ? 'rgba(30,41,59,0.9)' : 'rgba(30,41,59,0.1)',
