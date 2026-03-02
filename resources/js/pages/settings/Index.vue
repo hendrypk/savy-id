@@ -11,7 +11,6 @@ import {
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
 const menuItems = [
     {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BudgetAllocationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -11,9 +12,10 @@ use Laravel\Fortify\Features;
 // ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('/', 'Dashboard', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ])->name('dashboard');
+    // Route::inertia('/', 'Dashboard', [
+    //     'canRegister' => Features::enabled(Features::registration()),
+    // ])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('wallets', WalletController::class);
     Route::resource('budget', BudgetAllocationController::class);
     Route::resource('loans', LoanController::class);

@@ -1,30 +1,30 @@
 <script setup lang="ts">
 import { 
-  PlusIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
-  BanknotesIcon,
-  CreditCardIcon,
-  HandRaisedIcon,
-  ClockIcon
+  PlusIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
+  BanknotesIcon, CreditCardIcon, HandRaisedIcon,
 } from '@heroicons/vue/24/outline';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
-// Mock Data Terpadu
-const stats = {
-  total_equity: 12500000, // Saldo bersih
-  total_debt: 3200000,    // Total Pinjaman/Cicilan
-  monthly_savings: 1500000,
-};
+// Simply call the function without assigning it to a variable
+withDefaults(defineProps<{
+    stats: {
+        total_equity: number;
+        total_debt: number;
+        monthly_savings: number;
+        growth_percentage: number;
+    },
+    recentTransactions: Array<any>,
+    activeLoans: Array<any>
+}>(), {
+    stats: () => ({ total_equity: 0, total_debt: 0, monthly_savings: 0, growth_percentage: 0 }),
+    recentTransactions: () => [],
+    activeLoans: () => []
+});
 
-const recentTransactions = [
-  { id: 1, title: 'Gaji Kantor', category: 'Income', amount: 8000000, type: 'in', date: 'Hari ini' },
-  { id: 2, title: 'Bayar Indodana', category: 'Debt', amount: 500000, type: 'out', date: 'Kemarin' },
-  { id: 3, title: 'Starbucks', category: 'Lifestyle', amount: 55000, type: 'out', date: '25 Feb' },
-];
-
-const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { 
+    style: 'currency', currency: 'IDR', minimumFractionDigits: 0 
+}).format(val);
 </script>
 
 <template>
@@ -33,22 +33,24 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'curr
   <UserMobileLayout title="Dashboard">
     <div class="space-y-7 pb-12">
       
-      <section class="grid grid-cols-1 gap-4">
+      <section>
         <div class="bg-slate-900 dark:bg-indigo-950 rounded-[2.5rem] p-7 text-white shadow-2xl relative overflow-hidden">
           <div class="relative z-10">
             <div class="flex justify-between items-center mb-4">
               <span class="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">Total Kekayaan Bersih</span>
-              <div class="px-2 py-1 bg-green-500/20 text-green-400 rounded-lg text-[10px] font-bold">+12% bln ini</div>
+              <div class="px-2 py-1 bg-green-500/20 text-green-400 rounded-lg text-[10px] font-bold">
+                +{{ stats.growth_percentage }}% bln ini
+              </div>
             </div>
             <h2 class="text-3xl font-black tracking-tighter mb-6">{{ formatIDR(stats.total_equity) }}</h2>
             
             <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-5">
               <div>
-                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Total Hutang/Pinjaman</p>
+                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Total Hutang</p>
                 <p class="text-sm font-extrabold text-rose-400">{{ formatIDR(stats.total_debt) }}</p>
               </div>
               <div class="text-right">
-                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Target Menabung</p>
+                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Target Nabung</p>
                 <p class="text-sm font-extrabold text-indigo-300">{{ formatIDR(stats.monthly_savings) }}</p>
               </div>
             </div>
@@ -85,23 +87,14 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'curr
       </div>
 
       <section>
-        <div class="flex justify-between items-center mb-4 px-2">
-          <h3 class="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest">Pinjaman Aktif</h3>
-          <Link href="#" class="text-[10px] font-bold text-indigo-600 underline">Manage</Link>
-        </div>
+        <h3 class="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest mb-4 px-2">Pinjaman Aktif</h3>
         <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-5 px-5">
-          <div class="min-w-40 bg-linear-to-br from-slate-800 to-slate-900 p-5 rounded-4xl text-white flex flex-col justify-between h-40 shadow-xl">
+          <div v-for="loan in activeLoans" :key="loan.id" 
+               class="min-w-40 bg-linear-to-br from-slate-800 to-slate-900 p-5 rounded-4xl text-white flex flex-col justify-between h-40 shadow-xl">
             <div class="bg-white/10 w-fit p-2 rounded-xl"><CreditCardIcon class="w-5 h-5 text-indigo-300" /></div>
             <div>
-              <p class="text-[10px] text-slate-400 font-bold mb-1 italic">Kredivo</p>
-              <p class="text-sm font-black">{{ formatIDR(1200000) }}</p>
-            </div>
-          </div>
-          <div class="min-w-40 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-5 rounded-4xl flex flex-col justify-between h-40 shadow-sm">
-            <div class="bg-amber-50 dark:bg-amber-900/20 w-fit p-2 rounded-xl"><ClockIcon class="w-5 h-5 text-amber-600" /></div>
-            <div>
-              <p class="text-[10px] text-slate-400 font-bold mb-1 italic">Pinjam Teman</p>
-              <p class="text-sm font-black text-slate-800 dark:text-slate-200">{{ formatIDR(2000000) }}</p>
+              <p class="text-[10px] text-slate-400 font-bold mb-1 italic">{{ loan.provider }}</p>
+              <p class="text-sm font-black">{{ formatIDR(loan.amount) }}</p>
             </div>
           </div>
           <div class="min-w-25 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl">
@@ -138,8 +131,3 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'curr
     </div>
   </UserMobileLayout>
 </template>
-
-<style scoped>
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>

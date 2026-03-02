@@ -107,4 +107,38 @@ class User extends Authenticatable
     {
         return $this->hasMany(BudgetAllocation::class);
     }
+
+    /**
+     * Calculate total balance across all wallets (Net Worth)
+     */
+    public function currentBalance(): float
+    {
+        return (float) $this->wallets()->sum('balance');
+    }
+
+    /**
+     * Calculate total outstanding debt from active loans
+     */
+    public function totalDebt(): float
+    {
+        return (float) $this->loans()->where('status', 'active')->sum('remaining_amount');
+    }
+
+    /**
+     * Get the monthly savings target (from budget allocations)
+     */
+    public function targetSavings(): float
+    {
+        return (float) $this->budgets()
+            ->where('category', 'like', '%Saving%')
+            ->sum('amount');
+    }
+
+    /**
+     * Access transactions through wallets (HasManyThrough)
+     */
+    public function walletTransactions(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(WalletTransaction::class, Wallet::class);
+    }
 }
