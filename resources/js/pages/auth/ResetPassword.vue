@@ -21,6 +21,7 @@ const inputEmail = ref(props.email);
     <AuthLayout
         title="Reset password"
         description="Please enter your new password below"
+        class="text-slate-200"
     >
         <Head title="Reset password" />
 
@@ -32,7 +33,7 @@ const inputEmail = ref(props.email);
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email</Label>
+                    <Label for="email" class="text-slate-200">Email</Label>
                     <Input
                         id="email"
                         type="email"
@@ -46,7 +47,7 @@ const inputEmail = ref(props.email);
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password" class="text-slate-200">Password</Label>
                     <Input
                         id="password"
                         type="password"
@@ -60,7 +61,7 @@ const inputEmail = ref(props.email);
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">
+                    <Label for="password_confirmation" class="text-slate-200">
                         Confirm password
                     </Label>
                     <Input

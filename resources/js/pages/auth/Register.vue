@@ -15,6 +15,7 @@ import { store } from '@/routes/register';
     <AuthBase
         title="Create an account"
         description="Enter your details below to create your account"
+        class="text-slate-200"
     >
         <Head title="Register" />
 
@@ -26,7 +27,7 @@ import { store } from '@/routes/register';
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="name" class="text-slate-200">Name</Label>
                     <Input
                         id="name"
                         type="text"
@@ -42,7 +43,7 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="name">Phone</Label>
+                    <Label for="name" class="text-slate-200">Phone</Label>
                     <Input
                         id="phone"
                         type="text"
@@ -58,7 +59,7 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email" class="text-slate-200">Email address</Label>
                     <Input
                         id="email"
                         type="email"
@@ -73,7 +74,7 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password" class="text-slate-200">Password</Label>
                     <Input
                         id="password"
                         type="password"
@@ -88,7 +89,7 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
+                    <Label for="password_confirmation" class="text-slate-200">Confirm password</Label>
                     <Input
                         id="password_confirmation"
                         type="password"

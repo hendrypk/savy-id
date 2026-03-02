@@ -22,6 +22,7 @@ defineProps<{
 <template>
     <AuthBase
         title="Log in to your account"
+        class="text-slate-200"
         description="Enter your email and password below to log in"
     >
         <Head title="Log in" />
@@ -41,7 +42,7 @@ defineProps<{
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email" class="text-slate-200">Email address</Label>
                     <Input
                         id="email"
                         type="email"
@@ -58,7 +59,7 @@ defineProps<{
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
+                        <Label for="password" class="text-slate-200">Password</Label>
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
