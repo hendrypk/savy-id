@@ -9,7 +9,7 @@
             "purpose": "any"
         },
         {
-            "src": "/app-logo.png",
+            "src": "/logo-light.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
