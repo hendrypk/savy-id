@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { 
   BanknotesIcon, 
-  EllipsisVerticalIcon,
   CalendarDaysIcon, 
   EyeIcon
 } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js'; 
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Fab from '@/components/ui/button/Fab.vue';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 interface Loan {
   uuid: string;
@@ -24,7 +23,7 @@ interface Loan {
   remaining_tenor: number;
 }
 
-const props = defineProps<{
+defineProps<{
   loans: Loan[];
   totalDebt: number;
   totalMonthly: number;

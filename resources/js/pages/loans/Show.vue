@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { 
-  BanknotesIcon, 
   CalendarDaysIcon, 
   ClockIcon,
   ShieldCheckIcon,
@@ -8,9 +7,9 @@ import {
   ReceiptPercentIcon
 } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
+import dayjs from 'dayjs'; // Import Day.js
 import { route } from 'ziggy-js';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-import dayjs from 'dayjs'; // Import Day.js
 import 'dayjs/locale/id'; // Import locale Indonesia
 
 // Set locale ke Indonesia agar nama bulan dalam bahasa Indonesia
@@ -35,7 +34,7 @@ interface LoanDetail {
   transactions: Transaction[];
 }
 
-const props = defineProps<{
+defineProps<{
   loan: LoanDetail;
 }>();
 

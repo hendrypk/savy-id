@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { ChevronLeftIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
 defineProps<{
     title?: string;
