@@ -23,7 +23,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function version(Request $request): ?string
     {
-        return parent::version($request);
+        // return parent::version($request);
+        return md5_file(base_path('package.json'));
     }
 
     /**
@@ -33,15 +34,20 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-    public function share(Request $request): array
-    {
-        return [
-            ...parent::share($request),
-            'name' => config('app.name'),
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-        ];
-    }
+public function share(Request $request): array
+{
+    $packageJson = json_decode(file_get_contents(base_path('package.json')), true);
+    $version = $packageJson['version'] ?? '1.0.0';
+
+    return [
+        ...parent::share($request),
+        'app_version' => $version, // Pastikan kunci ini ada
+        'name' => config('app.name'),
+        'auth' => [
+            'user' => $request->user(),
+        ],
+        'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+    ];
+}
+    
 }

@@ -105,7 +105,7 @@ const menuItems = [
             </div>
 
             <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-4">
-                Versi 1.0.2 • AnggaranKu
+                Versi {{ $page.props.app_version }} • Savy | Smart Finance Manage
             </p>
         </div>
     </UserMobileLayout>
