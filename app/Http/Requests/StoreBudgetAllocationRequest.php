@@ -23,7 +23,7 @@ class StoreBudgetAllocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'transaction_category_id' => 'required|exists:transaction_categories,id',
             'plan_amount' => 'required|numeric|min:1000',
             'month_year' => 'required|string',
         ];

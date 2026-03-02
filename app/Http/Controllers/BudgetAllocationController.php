@@ -83,12 +83,15 @@ class BudgetAllocationController extends Controller
      */
     public function store(StoreBudgetAllocationRequest $request): RedirectResponse
     {
+        $validated = $request->validated();
         $userId = Auth::id();
 
-        // Logic is already validated at this point
         BudgetAllocation::create(array_merge($request->validated(), [
-            'uuid' => (string) Str::uuid(),
             'user_id' => $userId,
+            'uuid' => (string) str()->uuid(),
+            'transaction_category_id' => $validated['transaction_category_id'],
+            'plan_amount' => $validated['plan_amount'],
+            'month_year' => $validated['month_year'],
         ]));
 
         return redirect()->route('budget.index')->with('success', 'Budget created successfully!');
