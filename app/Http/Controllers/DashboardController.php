@@ -15,7 +15,7 @@ class DashboardController extends Controller
             'stats' => [
                 'total_equity' => $user->currentBalance(),
                 'total_debt' => $user->totalDebt(),
-                'monthly_savings' => $user->targetSavings(),
+                'monthly_savings' => $user->totalSavings(),
                 'growth_percentage' => 12,
             ],
             'recentTransactions' => $user->walletTransactions()
