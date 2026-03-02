@@ -19,44 +19,41 @@ class BudgetAllocationController extends Controller
 {
     public function index(Request $request): Response
     {
-        // 1. Get month from request or default to now (Format: YYYY-MM)
         $monthParam = $request->query('month', now()->format('Y-m'));
-        
-        // 2. Create a Carbon instance for easier formatting
         $date = \Carbon\Carbon::parse($monthParam);
-
         $userId = Auth::id();
 
         $budgets = BudgetAllocation::where('user_id', $userId)
-            ->where('month_year', $monthParam) // Filter by selected month
+            ->where('month_year', $monthParam)
             ->with('category')
             ->withSum(['transactions as spent_amount' => function ($query) {
                 $query->whereIn('type', ['budget_spending', 'expense']);
             }], 'amount')
             ->get()
-            ->map(function ($budget) {
-                $spent = $budget->spent_amount ?? 0;
-                $plan = $budget->plan_amount;
-                
-                return [
-                    'uuid' => $budget->uuid,
-                    'name' => $budget->category->name,
-                    'type' => $budget->category->type,
-                    'plan_amount' => (float) $plan,
-                    'spent_amount' => (float) $spent,
-                    'remaining' => (float) ($plan - $spent),
-                    'percentage' => $plan > 0 ? round(($spent / $plan) * 100) : 0,
-                ];
-            });
+            ->map(fn($budget) => $this->formatBudget($budget));
 
         return Inertia::render('budget/Index', [
             'categories' => $budgets,
             'total_planned' => (float) $budgets->sum('plan_amount'),
             'total_spent' => (float) $budgets->sum('spent_amount'),
-            // Send raw YYYY-MM for the logic and formatted string for UI
             'current_month_raw' => $monthParam,
             'current_month_label' => $date->translatedFormat('F Y'),
         ]);
+    }
+
+    private function formatBudget($budget): array
+    {
+        $spent = (float) ($budget->spent_amount ?? 0);
+        $plan = (float) $budget->plan_amount;
+        
+        return [
+            'uuid' => $budget->uuid,
+            'name' => $budget->category->name ?? 'N/A',
+            'plan_amount' => $plan,
+            'spent_amount' => $spent,
+            'remaining' => $plan - $spent,
+            'percentage' => $plan > 0 ? round(($spent / $plan) * 100) : 0,
+        ];
     }
 
     /**
@@ -69,7 +66,9 @@ class BudgetAllocationController extends Controller
          * We fetch categories from the transaction_categories table.
          * Only selecting 'id' and 'name' to keep the payload lightweight.
          */
+        $userId = Auth::id();
         $categories = TransactionCategory::select('id', 'name')
+            ->where('user_id', $userId)
             ->orderBy('name', 'asc')
             ->get();
 
@@ -82,18 +81,11 @@ class BudgetAllocationController extends Controller
      * Store a newly created budget allocation in storage.
      * * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
-     */
+    **/
     public function store(StoreBudgetAllocationRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-        $userId = Auth::id();
-
-        BudgetAllocation::create(array_merge($request->validated(), [
-            'user_id' => $userId,
-            'uuid' => (string) str()->uuid(),
-            'transaction_category_id' => $validated['transaction_category_id'],
-            'plan_amount' => $validated['plan_amount'],
-            'month_year' => $validated['month_year'],
+        $request->user()->budgets()->create(array_merge($request->validated(), [
+            'uuid' => (string) Str::uuid(),
         ]));
 
         return redirect()->route('budget.index')->with('success', 'Budget created successfully!');
@@ -107,7 +99,9 @@ class BudgetAllocationController extends Controller
             ->where('user_id', $userId)
             ->firstOrFail();
 
-        $categories = TransactionCategory::select('id', 'name')->get();
+        $categories = TransactionCategory::select('id', 'name')
+            ->where('user_id', $userId)
+            ->get();
 
         return Inertia::render('budget/Edit', [
             'budget' => $budget,

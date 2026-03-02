@@ -22,6 +22,7 @@ interface Category {
     type: 'income' | 'expense';
     icon: string;
     color: string;
+    is_system: string;
 }
 
 defineProps<{
@@ -98,14 +99,28 @@ const deleteCategory = async (uuid: string) => {
                     <div class="flex items-center gap-1 relative z-10">
                         <Link 
                             :href="route('transaction-categories.edit', category.uuid)" 
-                            class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-2xl transition-all"
+                            :class="[
+                                'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
+                                category.is_system 
+                                    ? 'opacity-30 cursor-not-allowed text-slate-300' 
+                                    : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
+                            ]"
+                            :as="category.is_system ? 'button' : 'a'"
+                            :disabled="!!category.is_system" 
                         >
                             <PencilSquareIcon class="w-5 h-5" />
                         </Link>
 
                         <button 
-                            @click="deleteCategory(category.uuid)" 
-                            class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-2xl transition-all"
+                            type="button"
+                            @click="!category.is_system && deleteCategory(category.uuid)" 
+                            :disabled="!!category.is_system"
+                            :class="[
+                                'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
+                                category.is_system 
+                                    ? 'opacity-30 cursor-not-allowed text-slate-300' 
+                                    : 'text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30'
+                            ]"
                         >
                             <TrashIcon class="w-5 h-5" />
                         </button>
