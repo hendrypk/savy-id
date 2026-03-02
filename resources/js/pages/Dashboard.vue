@@ -50,7 +50,7 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', {
                 <p class="text-sm font-extrabold text-rose-400">{{ formatIDR(stats.total_debt) }}</p>
               </div>
               <div class="text-right">
-                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Target Nabung</p>
+                <p class="text-[9px] uppercase text-slate-400 font-bold mb-1">Total Nabung</p>
                 <p class="text-sm font-extrabold text-indigo-300">{{ formatIDR(stats.monthly_savings) }}</p>
               </div>
             </div>

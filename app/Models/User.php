@@ -125,13 +125,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the monthly savings target (from budget allocations)
+     * Get the monthly savings total (from budget allocations)
      */
-    public function targetSavings(): float
+    public function totalSavings(): float
     {
-        return (float) $this->budgets()
-            ->where('category', 'like', '%Saving%')
-            ->sum('amount');
+return (float) $this->savings()->sum('current_amount');
+
     }
 
     /**
