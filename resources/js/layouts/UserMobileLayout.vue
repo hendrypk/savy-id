@@ -37,7 +37,7 @@ const inactiveClass = "text-slate-400 dark:text-slate-500 hover:text-slate-600";
 
 <template>
     <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex justify-center font-sans antialiased text-slate-900 dark:text-slate-100 transition-colors duration-300">
-        <div class="w-full md:max-w-md bg-white dark:bg-slate-900 min-h-screen shadow-2xl flex flex-col relative border-x border-slate-100 dark:border-slate-800">
+        <div class="max:w-full bg-white dark:bg-slate-900 min-h-screen shadow-2xl flex flex-col relative border-x border-slate-100 dark:border-slate-800">
             
             <MobileHeader 
                 :title="title" 

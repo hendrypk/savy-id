@@ -2,7 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"  @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
         <meta charset="utf-8">
-        <link rel="manifest" href="/manifest.json">
+        {{-- <link rel="manifest" href="/manifest.json"> --}}
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
         <meta name="theme-color" content="#6366f1">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -50,5 +51,16 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        <script>
+            if ('service-worker' in navigator) {
+                window.addEventListener('load', () => {
+                    // Pastikan path-nya benar ke folder public Laravel
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(reg => console.log('Savy PWA Aktif!', reg.scope))
+                        .catch(err => console.error('PWA gagal:', err));
+                });
+            }
+        </script>
+
     </body>
 </html>
