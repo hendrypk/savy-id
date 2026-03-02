@@ -12,43 +12,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Capture existing data
-        $oldData = DB::table('loans')->get();
+        // 1. Correct MariaDB syntax to disable foreign key checks
+        Schema::disableForeignKeyConstraints();
 
-        // 2. Disable Foreign Keys and drop old table
-        DB::statement('PRAGMA foreign_keys = OFF');
-        Schema::dropIfExists('loans');
+        // 2. Update the ENUM using native MariaDB syntax
+        // This is much safer than dropping and recreating the entire table
+        DB::statement("ALTER TABLE loans MODIFY COLUMN loan_type ENUM(
+            'credit_card', 
+            'pinjol', 
+            'personal', 
+            'bank', 
+            'kasbon_kantor', 
+            'other'
+        ) NOT NULL");
 
-        // 3. Recreate table with updated ENUM (CHECK constraint)
-        DB::statement("
-            CREATE TABLE loans (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                uuid VARCHAR NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                name VARCHAR NOT NULL, 
-                loan_type VARCHAR CHECK (loan_type IN ('credit_card', 'pinjol', 'personal', 'bank', 'kasbon_kantor', 'other')) NOT NULL, 
-                credit_limit NUMERIC NOT NULL, 
-                interest_rate_monthly NUMERIC NOT NULL DEFAULT '0', 
-                due_date INTEGER NOT NULL, 
-                created_at DATETIME, 
-                updated_at DATETIME, 
-                remaining_amount NUMERIC NOT NULL DEFAULT '0', 
-                monthly_installment NUMERIC NOT NULL DEFAULT '0', 
-                status VARCHAR NOT NULL DEFAULT 'active', 
-                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-            )
-        ");
-
-        // 4. Re-apply Indexes
-        DB::statement('CREATE UNIQUE INDEX loans_uuid_unique ON loans (uuid)');
-
-        // 5. Restore data
-        foreach ($oldData as $row) {
-            DB::table('loans')->insert((array) $row);
-        }
-
-        // 6. Re-enable Foreign Keys
-        DB::statement('PRAGMA foreign_keys = ON');
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -56,8 +34,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('loans', function (Blueprint $table) {
-            //
-        });
+        Schema::disableForeignKeyConstraints();
+
+        // Revert to original enum values if needed
+        DB::statement("ALTER TABLE loans MODIFY COLUMN loan_type ENUM(
+            'credit_card', 
+            'personal', 
+            'other'
+        ) NOT NULL");
+
+        Schema::enableForeignKeyConstraints();
     }
 };
