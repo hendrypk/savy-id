@@ -11,6 +11,7 @@ import {
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
 const menuItems = [
     {
@@ -103,10 +104,50 @@ const menuItems = [
                     </Link>
                 </div>
             </div>
+            <div class="flex flex-col items-center justify-center space-y-6 pt-12 pb-10">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-15 w-15 items-center justify-center">
+                            <img 
+                                src="/logo-light.png" 
+                                alt="Savy Logo" 
+                                class="text-indigo-600 dark:text-indigo-400"
+                            >
+                    </div>     
+                    
+                    <div class="h-5 w-[1.5px] bg-slate-200 dark:bg-slate-800"></div>
+                    
+                    <div class="flex flex-col">
+                        <span class="text-[11px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-[0.25em] leading-none">
+                            Savy
+                        </span>
+                        <span class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
+                            Smart Finance Manager
+                        </span>
+                    </div>
+                </div>
 
-            <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-4">
-                Versi {{ $page.props.app_version }} • Savy | Smart Finance Manage
-            </p>
+                <div class="flex items-center gap-3 bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.07)]">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                            System Active
+                        </span>
+                    </div>
+                    
+                    <div class="w-px h-3 bg-slate-200 dark:bg-slate-700"></div>
+                    
+                    <span class="text-[10px] font-mono font-black text-indigo-600 dark:text-indigo-400">
+                        v{{ $page.props.app_version }}
+                    </span>
+                </div>
+
+                <p class="text-[9px] font-bold text-slate-300 dark:text-slate-700 uppercase tracking-widest">
+                    &copy; 2026 Smart Finance Intelligence
+                </p>
+            </div>
         </div>
     </UserMobileLayout>
 </template>

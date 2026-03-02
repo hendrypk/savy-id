@@ -132,7 +132,7 @@ const deleteCategory = async (uuid: string) => {
                 </div>
             </div>
 
-            <div v-if="categories.length === 0" class="py-20 flex flex-col items-center">
+            <div v-if="categories.data.length === 0" class="py-20 flex flex-col items-center">
                 <div class="relative mb-6">
                     <div class="absolute inset-0 bg-indigo-100 dark:bg-indigo-900/20 blur-3xl rounded-full"></div>
                     <div class="relative bg-white dark:bg-slate-800 w-24 h-24 rounded-[2.5rem] flex items-center justify-center shadow-xl border border-indigo-50 dark:border-slate-700">
