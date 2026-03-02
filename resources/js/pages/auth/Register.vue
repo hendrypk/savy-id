@@ -36,6 +36,7 @@ import { store } from '@/routes/register';
                         autocomplete="name"
                         name="name"
                         placeholder="Full name"
+                        class="text-white"
                     />
                     <InputError :message="errors.name" />
                 </div>
@@ -51,6 +52,7 @@ import { store } from '@/routes/register';
                         autocomplete="phone"
                         name="phone"
                         placeholder="Phone Number"
+                        class="text-white"
                     />
                     <InputError :message="errors.phone" />
                 </div>
@@ -65,6 +67,7 @@ import { store } from '@/routes/register';
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
+                        class="text-white"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -79,6 +82,7 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password"
                         placeholder="Password"
+                        class="text-white"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -93,6 +97,7 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password_confirmation"
                         placeholder="Confirm password"
+                        class="text-white"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>

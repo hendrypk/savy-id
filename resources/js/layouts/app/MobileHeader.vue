@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { ChevronLeftIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
 
@@ -39,7 +40,13 @@ const goBackManual = () => {
 
             <div class="flex flex-col">
                 <h1 v-if="isHome" class="text-xl font-black text-indigo-600 dark:text-indigo-400 tracking-tighter leading-none italic">
-                    Savy.
+                    <div
+                        class="mb-1 flex h-20 w-20 items-center justify-center rounded-md"
+                    >
+                        <AppLogoIcon
+                            class="size-9 fill-current text-foreground dark:text-white"
+                        />
+                    </div>
                 </h1>
                 <h1 v-else-if="title" class="text-base font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-none">
                     {{ title }}
