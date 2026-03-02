@@ -162,33 +162,33 @@
     --sidebar: hsl(240 5.9% 10%);
 }
 
+/* --- NATIVE APP FEEL RESET --- */
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        /* Fix for mobile browser address bars */
+        height: 100vh;
+        height: -webkit-fill-available; 
+        overflow-x: hidden;
+        background-color: var(--background);
+        /* Prevents the 'bounce' effect on iOS which can show white gaps */
+        position: fixed; 
+        left: 0;
+        top: 0;
     }
-    body {
-        @apply bg-background text-foreground;
+
+    #app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 }
 
-/* Mencegah highlight biru saat klik di mobile */
-* {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-}
-
-/* Mencegah seleksi teks kecuali pada input */
-body {
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-input, textarea {
-    user-select: text;
-    -webkit-user-select: text;
-}
-
-/* Scroll halus seperti native */
-.overflow-y-auto {
-    -webkit-overflow-scrolling: touch;
+/* Handle Notch & Bottom Bar (Samsung/iPhone) */
+.safe-area-inset {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
