@@ -11,6 +11,10 @@ import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Simply call the function without assigning it to a variable
 withDefaults(defineProps<{
+    inspiringQuote: {
+      text: string;
+      author: string;
+    }
     stats: {
         total_equity: number;
         total_debt: number;
@@ -35,7 +39,16 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', {
 
   <UserMobileLayout title="Dashboard">
     <div class="space-y-7 pb-12">
-      
+    <section class="mb-6 block md:hidden">
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-900 dark:text-indigo-200 p-4 rounded-3xl text-sm font-bold shadow-md">
+        <p class="font-bold text-[11px] text-center text-indigo-900 dark:text-indigo-200">
+          {{ inspiringQuote.text }}
+        </p>
+        <p class="text-[9px] text-center text-gray-400 dark:text-gray-400 mt-2 font-normal">
+          {{ inspiringQuote.author }}
+        </p>
+      </div>
+    </section>
       <section>
         <div class="bg-slate-900 dark:bg-indigo-950 rounded-[2.5rem] p-7 text-white shadow-2xl relative overflow-hidden">
           <div class="relative z-10">

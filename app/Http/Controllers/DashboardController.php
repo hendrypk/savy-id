@@ -10,8 +10,25 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $fullQuote = $user->inspiring_quote ?? ''; // ambil dari DB
+
+        // Pecah quote dan author
+        $quote = '';
+        $author = '';
+
+        if (!empty($fullQuote) && str_contains($fullQuote, '—')) {
+            [$quotePart, $authorPart] = explode('—', $fullQuote, 2);
+            $quote = trim($quotePart);
+            $author = trim($authorPart);
+        } else {
+            $quote = $fullQuote; // fallback
+        }
 
         return Inertia::render('Dashboard', [
+            'inspiringQuote' => [
+                'text' => $quote,
+                'author' => $author,
+            ],
             'stats' => [
                 'total_equity' => $user->currentBalance(),
                 'total_debt' => $user->totalDebt(),
