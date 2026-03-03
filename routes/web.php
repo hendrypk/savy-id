@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\BudgetAllocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
@@ -11,6 +12,9 @@ use Laravel\Fortify\Features;
 // Route::inertia('/', 'Welcome', [
 //     'canRegister' => Features::enabled(Features::registration()),
 // ])->name('home');
+
+Route::get('/auth/google', [GoogleController::class, 'redirect']);
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::inertia('/', 'Dashboard', [

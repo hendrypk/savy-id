@@ -14,6 +14,7 @@ interface Props {
   prefix?: string
   class?: string
   inputClass?: string
+  readonly?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -52,6 +53,7 @@ const internalValue = computed({
 
       <Input
         :type="type"
+        :readonly="readonly"
         v-model="internalValue"
         :placeholder="placeholder"
         :class="cn(
