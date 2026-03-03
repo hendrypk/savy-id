@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { 
   PlusIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
-  BanknotesIcon, CreditCardIcon, HandRaisedIcon,
+  CreditCardIcon, HandRaisedIcon,
   ArrowDownLeftIcon,
   ArrowUpLeftIcon,
 } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { route } from 'ziggy-js';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 // Simply call the function without assigning it to a variable
 withDefaults(defineProps<{
@@ -130,9 +130,13 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', {
         <h3 class="font-black text-slate-800 dark:text-white uppercase text-[10px] tracking-[0.2em] opacity-50">
             Aktivitas Terakhir
         </h3>
-        <button class="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
-            Lihat Semua
-        </button>
+      <Link 
+          :href="route('api.transactions.index')" 
+          as="button"
+          class="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400 hover:opacity-70 transition-opacity"
+      >
+          Lihat Semua
+      </Link>
     </div>
 
     <div class="space-y-3">

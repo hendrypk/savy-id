@@ -3,19 +3,19 @@ import {
     ChevronDownIcon, BanknotesIcon, CalendarDaysIcon, 
     WalletIcon, Squares2X2Icon, ArrowUpIcon, 
     ArrowDownIcon, LinkIcon, DocumentTextIcon, 
-    LockClosedIcon, XMarkIcon
+    LockClosedIcon
 } from '@heroicons/vue/24/outline';
-import { useForm, Head } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
 import { route } from 'ziggy-js';
 
 import { Button } from '@/components/ui/button';
-import InputGroup from '@/components/ui/input/InputGroup.vue';
-import Label from '@/components/ui/label/Label.vue';
 import {
     DropdownMenu, DropdownMenuContent,
     DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import InputGroup from '@/components/ui/input/InputGroup.vue';
+import Label from '@/components/ui/label/Label.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import { mobileToast } from '@/lib/swal';
 
@@ -77,9 +77,6 @@ if (form.budget_allocation_id) {
 /** Returns true if the transaction is an expense */
 const isExpense = computed(() => form.type === 'expense');
 
-/** Formats the selected date into YYYY-MM for visual display */
-const selectedMonthYear = computed(() => form.transaction_date?.substring(0, 7) || '');
-
 /** Returns all available budgets without filtering (as requested) */
 const allBudgets = computed(() => {
     console.log('Budgets from props:', props.budgets); // Cek console browser Anda
@@ -130,7 +127,15 @@ watch(() => form.budget_allocation_id, (newId) => {
 });
 
 /** Handles form submission */
-const submit = () => form.post(route('transactions.store'));
+const submit = () => {
+    form.post(route('api.transactions.store'), {
+        onSuccess: () => mobileToast('Anggaran berhasil dibuat! 🎯'),
+        onError: (errors) => {
+            const firstError = Object.values(errors)[0];
+            mobileToast(firstError || 'Gagal menyimpan anggaran', 'error');
+        },
+    });
+};
 </script>
 
 <template>
@@ -141,7 +146,7 @@ const submit = () => form.post(route('transactions.store'));
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-100 dark:border-slate-700">
                     <component :is="isExpense ? ArrowUpIcon : ArrowDownIcon" 
                             :class="isExpense ? 'text-rose-500' : 'text-emerald-500'" 
-                            class="w-4 h-4 stroke-[3]" />
+                            class="w-4 h-4 stroke-3" />
                     
                     <span class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">
                         {{ isExpense ? 'New Expense' : 'New Income' }}

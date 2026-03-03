@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\TransactionType;
 use App\Models\WalletTransaction;
 
 /**
@@ -25,46 +26,38 @@ class TransactionObserver
      */
     public function created(WalletTransaction $transaction): void
     {
-        // Load the related wallet model
+        // 1. UPDATE WALLET BALANCE
+        // We use the methods we defined in the Enum
         $wallet = $transaction->wallet;
 
-        /**
-         * WALLET BALANCE LOGIC
-         * ---------------------------------------------------------
-         * Determine whether to increment or decrement the wallet 
-         * balance based on the cash flow direction.
-         */
-        switch ($transaction->type) {
-            // Cash Inflows: Increase wallet balance
-            case WalletTransaction::TYPE_INCOME:
-            case WalletTransaction::TYPE_LOAN_DISBURSEMENT:
-                $wallet->increment('balance', $transaction->amount);
-                break;
-                
-            // Cash Outflows: Decrease wallet balance
-            case WalletTransaction::TYPE_EXPENSE:
-            case WalletTransaction::TYPE_BUDGET_SPENDING:
-            case WalletTransaction::TYPE_SAVING:
-            case WalletTransaction::TYPE_LOAN_REPAYMENT:
-                $wallet->decrement('balance', $transaction->amount);
-                break;
+        if ($transaction->type->isInflow()) {
+            $wallet->increment('balance', $transaction->amount);
+        } elseif ($transaction->type->isOutflow()) {
+            $wallet->decrement('balance', $transaction->amount);
         }
 
-        /**
-         * LOAN SENSITIVE LOGIC
-         * ---------------------------------------------------------
-         * If the transaction is specifically for a loan repayment, 
-         * we must update the liability status of the user.
-         */
-        if ($transaction->type === WalletTransaction::TYPE_LOAN_REPAYMENT && $transaction->loan_id) {
-            $loan = $transaction->loan;
+        // 2. UPDATE LOAN BALANCE
+        // Check if the transaction affects a Loan via the Morphic relationship
+        if ($transaction->type->affectsLoanBalance() && $transaction->reference_type === Loan::class) {
             
-            // Subtract the paid amount from the total remaining debt
-            $loan->decrement('remaining_amount', $transaction->amount);
-            
-            // Check for full repayment to auto-update status
-            if ($loan->remaining_amount <= 0) {
-                $loan->update(['status' => 'paid']);
+            $loan = $transaction->reference; // Using the 'reference' morphTo relation
+
+            if ($loan) {
+                if ($transaction->type === TransactionType::LOAN_DISBURSEMENT) {
+                    // Getting a new loan increases your debt
+                    $loan->increment('remaining_amount', $transaction->amount);
+                } elseif ($transaction->type === TransactionType::LOAN_REPAYMENT) {
+                    // Paying it back decreases your debt
+                    $loan->decrement('remaining_amount', $transaction->amount);
+                }
+
+                // Auto-close loan if paid off
+                if ($loan->remaining_amount <= 0) {
+                    $loan->update([
+                        'remaining_amount' => 0,
+                        'status' => 'paid' // Matches your Loan::STATUS_PAID
+                    ]);
+                }
             }
         }
     }

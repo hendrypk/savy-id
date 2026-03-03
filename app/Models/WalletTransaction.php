@@ -18,6 +18,7 @@ class WalletTransaction extends Model
         'uuid', 
         'user_id', 
         'wallet_id', 
+        'transaction_category_id',
         'description', 
         'amount', 
         'type', 
@@ -62,5 +63,11 @@ class WalletTransaction extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo 
+    {
+        // Make sure the second argument matches your actual column name
+        return $this->belongsTo(TransactionCategory::class, 'transaction_category_id');
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\TransactionCategoryController;
+use App\Http\Controllers\Api\WalletTransactionController;
 use Illuminate\Support\Facades\Route;
 
 // PAKAI 'auth' SAJA, JANGAN 'auth:sanctum'
@@ -9,5 +10,5 @@ Route::middleware('auth')
     ->name('api.')
     ->group(function () {
         Route::apiResource('transaction-categories', TransactionCategoryController::class);
-        Route::apiResource('transactions', TransactionCategoryController::class);
+        Route::apiResource('transactions', WalletTransactionController::class);
     });

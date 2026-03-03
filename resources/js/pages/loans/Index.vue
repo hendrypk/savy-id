@@ -46,7 +46,7 @@ const formatCurrency = (value: number | string | null) => {
     <div class="space-y-6 pb-32"> 
       
       <div class="grid grid-cols-2 gap-3 px-1">
-        <div class="bg-rose-50/50 dark:bg-rose-500/10 p-4 rounded-[2rem] border border-rose-100 dark:border-rose-500/20 shadow-sm">
+        <div class="bg-rose-50/50 dark:bg-rose-500/10 p-4 rounded-4xl border border-rose-100 dark:border-rose-500/20 shadow-sm">
           <div class="flex items-center gap-1.5 mb-1 text-rose-400">
             <BanknotesIcon class="w-3 h-3 stroke-[2.5]" />
             <span class="text-[8px] font-black uppercase tracking-widest">Total Debt</span>
@@ -56,7 +56,7 @@ const formatCurrency = (value: number | string | null) => {
           </p>
         </div>
 
-        <div class="bg-indigo-50/50 dark:bg-indigo-500/10 p-4 rounded-[2rem] border border-indigo-100 dark:border-indigo-500/20 shadow-sm">
+        <div class="bg-indigo-50/50 dark:bg-indigo-500/10 p-4 rounded-4xl border border-indigo-100 dark:border-indigo-500/20 shadow-sm">
           <div class="flex items-center gap-1.5 mb-1 text-indigo-400">
             <CalendarDaysIcon class="w-3 h-3 stroke-[2.5]" />
             <span class="text-[8px] font-black uppercase tracking-widest">Monthly</span>
@@ -103,13 +103,13 @@ const formatCurrency = (value: number | string | null) => {
                     :href="route('loans.show', loan.uuid)" 
                     class="p-2 -mr-2 text-slate-300 active:text-indigo-500 transition-colors"
                   >
-                    <EyeIcon class="w-5 h-5 stroke-[2]" />
+                    <EyeIcon class="w-5 h-5 stroke-2" />
                   </Link>
                 </div>
               </div>
 
               <div class="mb-5 px-0.5">
-                <div class="flex justify-between text-[8px] mb-2 font-black uppercase tracking-[0.1em]">
+                <div class="flex justify-between text-[8px] mb-2 font-black uppercase tracking-widest">
                   <span class="text-slate-400 font-bold">Payoff Progress</span>
                   <span class="text-indigo-600 font-mono">{{ loan.progress }}%</span>
                 </div>
