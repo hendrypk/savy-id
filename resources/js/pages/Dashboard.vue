@@ -2,9 +2,12 @@
 import { 
   PlusIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
   BanknotesIcon, CreditCardIcon, HandRaisedIcon,
+  ArrowDownLeftIcon,
+  ArrowUpLeftIcon,
 } from '@heroicons/vue/24/outline';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { route } from 'ziggy-js';
 
 // Simply call the function without assigning it to a variable
 withDefaults(defineProps<{
@@ -60,30 +63,44 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', {
       </section>
 
       <div class="flex justify-around items-center bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-3xl shadow-sm mx-1">
-        <button class="flex flex-col items-center gap-2 group">
-          <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-2xl group-active:scale-90 transition-all">
-            <ArrowTrendingUpIcon class="w-6 h-6" />
-          </div>
-          <span class="text-[10px] font-black text-slate-500 uppercase">Masuk</span>
-        </button>
-        <button class="flex flex-col items-center gap-2 group">
-          <div class="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-2xl group-active:scale-90 transition-all">
-            <ArrowTrendingDownIcon class="w-6 h-6" />
-          </div>
-          <span class="text-[10px] font-black text-slate-500 uppercase">Keluar</span>
-        </button>
-        <button class="flex flex-col items-center gap-2 group">
+<Link 
+  :href="route('transactions.create', { type: 'income' })" 
+  class="flex flex-col items-center gap-2 group"
+>
+  <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-2xl group-active:scale-90 transition-all">
+    <ArrowTrendingUpIcon class="w-6 h-6" />
+  </div>
+  <span class="text-[10px] font-black text-slate-500 uppercase">Pemasukan</span>
+</Link>
+
+<Link 
+  :href="route('transactions.create', { type: 'expense' })" 
+  class="flex flex-col items-center gap-2 group"
+>
+  <div class="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-2xl group-active:scale-90 transition-all">
+    <ArrowTrendingDownIcon class="w-6 h-6" />
+  </div>
+  <span class="text-[10px] font-black text-slate-500 uppercase">Keluar</span>
+</Link>
+        <Link 
+          :href="route('loans.create')" 
+          class="flex flex-col items-center gap-2 group"
+        >
           <div class="p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-600 rounded-2xl group-active:scale-90 transition-all">
             <HandRaisedIcon class="w-6 h-6" />
           </div>
           <span class="text-[10px] font-black text-slate-500 uppercase">Pinjam</span>
-        </button>
-        <button class="flex flex-col items-center gap-2 group">
+        </Link>
+
+        <Link 
+          :href="route('budget.create')" 
+          class="flex flex-col items-center gap-2 group"
+        >
           <div class="p-3 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 rounded-2xl group-active:scale-90 transition-all">
             <PlusIcon class="w-6 h-6" />
           </div>
           <span class="text-[10px] font-black text-slate-500 uppercase">Budget</span>
-        </button>
+        </Link>
       </div>
 
       <section>
@@ -97,36 +114,70 @@ const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', {
               <p class="text-sm font-black">{{ formatIDR(loan.amount) }}</p>
             </div>
           </div>
-          <div class="min-w-25 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl">
-             <PlusIcon class="w-6 h-6 text-slate-300" />
-          </div>
+
+            <Link 
+              :href="route('budget.create')" 
+              class="min-w-25 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl"
+            >
+
+                <PlusIcon class="w-6 h-6" />
+            </Link>
         </div>
       </section>
 
-      <section>
-        <h3 class="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest mb-4 px-2">Aktivitas Terakhir</h3>
-        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm p-2">
-          <div v-for="tx in recentTransactions" :key="tx.id" 
-               class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-            <div class="flex items-center gap-4">
-              <div :class="[
-                'p-3 rounded-2xl font-bold text-lg',
-                tx.type === 'in' ? 'bg-green-50 text-green-600 dark:bg-green-900/20' : 'bg-slate-50 text-slate-600 dark:bg-slate-800'
-              ]">
-                <BanknotesIcon v-if="tx.type === 'in'" class="w-5 h-5" />
-                <CreditCardIcon v-else class="w-5 h-5" />
-              </div>
-              <div>
-                <p class="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-1">{{ tx.title }}</p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ tx.category }} • {{ tx.date }}</p>
-              </div>
+<section class="mt-8 px-2">
+    <div class="flex items-center justify-between mb-4 px-2">
+        <h3 class="font-black text-slate-800 dark:text-white uppercase text-[10px] tracking-[0.2em] opacity-50">
+            Aktivitas Terakhir
+        </h3>
+        <button class="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+            Lihat Semua
+        </button>
+    </div>
+
+    <div class="space-y-3">
+        <div v-for="tx in recentTransactions" :key="tx.id" 
+             class="group relative bg-white dark:bg-slate-900 p-4 rounded-4xl border border-slate-50 dark:border-slate-800 shadow-sm active:scale-95 transition-all duration-200">
+            
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div :class="[
+                        'w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:rotate-12',
+                        tx.type === 'in' 
+                            ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10' 
+                            : 'bg-rose-50 text-rose-600 dark:bg-rose-500/10'
+                    ]">
+                        <ArrowDownLeftIcon v-if="tx.type === 'in'" class="w-6 h-6" />
+                        <ArrowUpLeftIcon v-else class="w-6 h-6" />
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-black text-slate-800 dark:text-slate-100 mb-0.5">
+                            {{ tx.title }}
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                                {{ tx.category }}
+                            </span>
+                            <span class="text-[9px] font-bold text-slate-400 italic">
+                                {{ tx.date }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <p :class="[
+                        'text-sm font-black tracking-tight',
+                        tx.type === 'in' ? 'text-emerald-600' : 'text-slate-900 dark:text-white'
+                    ]">
+                        {{ tx.type === 'in' ? '+' : '-' }}{{ (tx.amount/1000).toLocaleString('id-ID', {minimumFractionDigits: 1}) }}k
+                    </p>
+                </div>
             </div>
-            <p :class="['text-sm font-black', tx.type === 'in' ? 'text-green-600' : 'text-slate-800 dark:text-slate-100']">
-              {{ tx.type === 'in' ? '+' : '-' }}{{ (tx.amount/1000).toFixed(0) }}k
-            </p>
-          </div>
         </div>
-      </section>
+    </div>
+</section>
 
     </div>
   </UserMobileLayout>

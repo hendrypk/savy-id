@@ -36,7 +36,6 @@ class Loan extends Model
 
     public function budgets()
     {
-        return $this->hasMany(BudgetAllocation::class, 'user_id', 'user_id')
-                    ->where('transaction_category_id', $this->getLoanCategoryId()); 
+        return $this->hasMany(BudgetAllocation::class, 'loan_id');
     }
 }

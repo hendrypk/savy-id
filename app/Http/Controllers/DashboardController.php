@@ -16,7 +16,7 @@ class DashboardController extends Controller
                 'total_equity' => $user->currentBalance(),
                 'total_debt' => $user->totalDebt(),
                 'monthly_savings' => $user->totalSavings(),
-                'growth_percentage' => 12,
+                'growth_percentage' => 12, // Ini bisa dibuat dinamis nanti
             ],
             'recentTransactions' => $user->walletTransactions()
                 ->latest()
@@ -24,10 +24,11 @@ class DashboardController extends Controller
                 ->get()
                 ->map(fn($tx) => [
                     'id' => $tx->id,
+                    'uuid' => $tx->uuid,
                     'title' => $tx->description,
-                    'category' => ucfirst($tx->type),
+                    'category' => $tx->type->label(),
                     'amount' => $tx->amount,
-                    'type' => ($tx->type === 'income' || $tx->type === 'in') ? 'in' : 'out',
+                    'type' => $tx->type->isInflow() ? 'in' : 'out',
                     'date' => $tx->created_at->diffForHumans(),
                 ]),
             'activeLoans' => $user->loans()
@@ -35,7 +36,7 @@ class DashboardController extends Controller
                 ->get()
                 ->map(fn($loan) => [
                     'id' => $loan->id,
-                    'provider' => $loan->name,
+                    'provider' => $loan->provider, // Pastikan menggunakan 'provider' sesuai tabel
                     'amount' => $loan->remaining_amount,
                 ]),
         ]);

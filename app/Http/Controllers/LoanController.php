@@ -88,6 +88,7 @@ class LoanController extends Controller
                             'uuid'                    => Str::uuid()->toString(),
                             'user_id'                 => $user->id,
                             'transaction_category_id' => $category->id,
+                            'loan_id' => $loan->id,
                             'plan_amount'             => $loan->monthly_installment,
                             'month_year'              => $startDate->copy()->addMonths($i)->format('Y-m'),
                             'created_at'              => now(),

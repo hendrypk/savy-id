@@ -13,19 +13,34 @@ class BudgetAllocation extends Model
     use SoftDeletes, BelongsToUser;
     
     protected $fillable = [
-        'uuid', 'user_id', 'transaction_category_id', 
-        'plan_amount', 'month_year'
+        'uuid', 
+        'user_id', 
+        'transaction_category_id', 
+        'loan_id', 
+        'plan_amount', 
+        'month_year',
+        'is_settled'
     ];
 
     public function category(): BelongsTo {
         return $this->belongsTo(TransactionCategory::class, 'transaction_category_id');
     }
 
-    public function transactions(): HasMany {
-        return $this->hasMany(WalletTransaction::class, 'budget_allocation_id');
+    public function transactions()
+    {
+        return $this->morphMany(WalletTransaction::class, 'reference');
     }
 
     public function getUsedAmountAttribute() {
         return $this->transactions()->sum('amount');
     }
+
+    public function getRemainingAmountAttribute() {
+        return max(0, $this->plan_amount - $this->used_amount);
+    }
+
+    public function loan(): BelongsTo {
+        return $this->belongsTo(Loan::class);
+    }
+    
 }

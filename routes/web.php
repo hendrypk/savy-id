@@ -4,6 +4,7 @@ use App\Http\Controllers\BudgetAllocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\WalletTransactionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -19,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('wallets', WalletController::class);
     Route::resource('budget', BudgetAllocationController::class);
     Route::resource('loans', LoanController::class);
+    Route::resource('transactions', WalletTransactionController::class)->only('create', 'edit');
 });
 
 require __DIR__.'/settings.php';

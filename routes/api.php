@@ -9,4 +9,5 @@ Route::middleware('auth')
     ->name('api.')
     ->group(function () {
         Route::apiResource('transaction-categories', TransactionCategoryController::class);
+        Route::apiResource('transactions', TransactionCategoryController::class);
     });
