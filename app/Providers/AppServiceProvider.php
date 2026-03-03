@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Mail\MailtrapApiTransport;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         \App\Models\WalletTransaction::observe(\App\Observers\TransactionObserver::class);
+
+        Mail::extend('mailtrap-api', function() {
+            return new MailtrapApiTransport();
+        });
     }
 
     /**

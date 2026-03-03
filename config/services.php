@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'mailtrap' => [
+        'token' => env('MAILTRAP_API_KEY'),
+        'inbox_id' => env('MAILTRAP_INBOX_ID'),
+    ],
+
 ];

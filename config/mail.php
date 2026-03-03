@@ -37,6 +37,10 @@ return [
 
     'mailers' => [
 
+        'mailtrap-api' => [
+            'transport' => 'mailtrap-api',
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),
