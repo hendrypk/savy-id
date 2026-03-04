@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Enums\TransactionType;
+use App\Models\Loan;
 use App\Models\WalletTransaction;
 
 /**

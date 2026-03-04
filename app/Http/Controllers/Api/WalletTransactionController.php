@@ -45,10 +45,8 @@ public function index()
     public function store(StoreTransactionRequest $request)
     {
         $data = $request->validated();
-        $type = TransactionType::from($data['type']);
-
-        return DB::transaction(function () use ($data, $type) {
-
+        
+        return DB::transaction(function () use ($data) {
             // --- HANDLE MORPH RELATION ---
             if (!empty($data['budget_allocation_id'])) {
                 $data['reference_type'] = \App\Models\BudgetAllocation::class;
@@ -59,36 +57,14 @@ public function index()
                 $data['reference_type'] = \App\Models\Loan::class;
             }
 
-            // optional: unset yang tidak dipakai
             unset($data['budget_allocation_id']);
             unset($data['ref_category']);
 
-            // 1. Create transaction
-            $transaction = WalletTransaction::create([
+            // JUST CREATE: The Observer will automatically handle the side effects
+            WalletTransaction::create([
                 ...$data,
                 'user_id' => auth()->id(),
             ]);
-
-            // 2. Update wallet
-            $wallet = Wallet::lockForUpdate()->findOrFail($data['wallet_id']);
-            
-            if ($type->isInflow()) {
-                $wallet->increment('balance', $data['amount']);
-            } elseif ($type->isOutflow()) {
-                $wallet->decrement('balance', $data['amount']);
-            }
-
-            // 3. Update Loan balance
-            if (
-                isset($data['reference_type']) &&
-                $data['reference_type'] === \App\Models\Loan::class
-            ) {
-                $loan = Loan::lockForUpdate()->findOrFail($data['reference_id']);
-
-                $type === TransactionType::LOAN_DISBURSEMENT
-                    ? $loan->increment('remaining_amount', $data['amount'])
-                    : $loan->decrement('remaining_amount', $data['amount']);
-            }
 
             return redirect()->route('api.transactions.index');
         });
