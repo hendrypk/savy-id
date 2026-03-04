@@ -28,37 +28,59 @@ class TransactionObserver
     public function created(WalletTransaction $transaction): void
     {
         // 1. UPDATE WALLET BALANCE
-        // We use the methods we defined in the Enum
         $wallet = $transaction->wallet;
-
         if ($transaction->type->isInflow()) {
             $wallet->increment('balance', $transaction->amount);
         } elseif ($transaction->type->isOutflow()) {
             $wallet->decrement('balance', $transaction->amount);
         }
 
-        // 2. UPDATE LOAN BALANCE
-        // Check if the transaction affects a Loan via the Morphic relationship
-        if ($transaction->type->affectsLoanBalance() && $transaction->reference_type === Loan::class) {
-            
-            $loan = $transaction->reference; // Using the 'reference' morphTo relation
+        // 2. UPDATE BUDGET ALLOCATION BALANCE (NEW)
+        if ($transaction->reference_type === \App\Models\BudgetAllocation::class) {
+            $budget = $transaction->reference;
+            if ($budget) {
+                // Every time a transaction hits a budget, increase the used_amount
+                $budget->increment('used_amount', $transaction->amount);
+            }
+        }
 
+        // 3. UPDATE LOAN BALANCE
+        if ($transaction->type->affectsLoanBalance() && $transaction->reference_type === Loan::class) {
+            $loan = $transaction->reference;
             if ($loan) {
                 if ($transaction->type === TransactionType::LOAN_DISBURSEMENT) {
-                    // Getting a new loan increases your debt
                     $loan->increment('remaining_amount', $transaction->amount);
                 } elseif ($transaction->type === TransactionType::LOAN_REPAYMENT) {
-                    // Paying it back decreases your debt
                     $loan->decrement('remaining_amount', $transaction->amount);
                 }
 
-                // Auto-close loan if paid off
                 if ($loan->remaining_amount <= 0) {
-                    $loan->update([
-                        'remaining_amount' => 0,
-                        'status' => 'paid' // Matches your Loan::STATUS_PAID
-                    ]);
+                    $loan->update(['remaining_amount' => 0, 'status' => 'paid']);
                 }
+            }
+        }
+    }
+
+    public function deleted(WalletTransaction $transaction)
+    {
+        $wallet = $transaction->wallet;
+
+        // --- REVERSE WALLET BALANCE ---
+        // If we delete an EXPENSE, we must put the money BACK (increment)
+        // If we delete an INCOME, we must take the money AWAY (decrement)
+        if ($transaction->type === TransactionType::INCOME) {
+            $wallet->decrement('balance', $transaction->amount);
+        } else {
+            $wallet->increment('balance', $transaction->amount);
+        }
+
+        // --- HANDLE LOAN REVERSAL (If applicable) ---
+        // If the transaction was a loan repayment, deleting it should 
+        // increase the remaining debt again.
+        if ($transaction->reference_type === \App\Models\Loan::class) {
+            $loan = $transaction->reference;
+            if ($loan) {
+                $loan->increment('remaining_amount', $transaction->amount);
             }
         }
     }

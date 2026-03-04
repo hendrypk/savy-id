@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('wallets', WalletController::class);
     Route::resource('budget', BudgetAllocationController::class);
     Route::resource('loans', LoanController::class);
-    Route::resource('transactions', WalletTransactionController::class)->only('create', 'edit');
+    Route::resource('transactions', WalletTransactionController::class)->only('index', 'create', 'edit');
 });
 
 require __DIR__.'/settings.php';

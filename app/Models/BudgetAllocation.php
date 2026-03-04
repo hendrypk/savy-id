@@ -18,6 +18,7 @@ class BudgetAllocation extends Model
         'transaction_category_id', 
         'loan_id', 
         'plan_amount', 
+        'used_amount',
         'month_year',
         'is_settled'
     ];

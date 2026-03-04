@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Transaction;
 
 use App\Enums\TransactionType;
+use App\Models\Wallet;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Validator;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -34,5 +36,26 @@ class StoreTransactionRequest extends FormRequest
             'reference_id'            => 'nullable|integer',
             'ref_category'            => 'nullable|in:budget,loan',
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $walletId = $this->input('wallet_id');
+            $amount = $this->input('amount');
+            $type = TransactionType::tryFrom($this->input('type'));
+
+            // Cek hanya jika tipe adalah pengeluaran (Outflow)
+            if ($walletId && $amount && $type && $type->isOutflow()) {
+                $wallet = Wallet::find($walletId);
+
+                if ($wallet && $wallet->balance < $amount) {
+                    $validator->errors()->add(
+                        'amount', 
+                        "Saldo tidak mencukupi. Saldo saat ini: " . number_format($wallet->balance, 0, ',', '.')
+                    );
+                }
+            }
+        });
     }
 }

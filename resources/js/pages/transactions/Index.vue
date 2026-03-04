@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { 
     ArrowUpRightIcon, ArrowDownLeftIcon, 
-    ArrowsRightLeftIcon, WalletIcon 
+    ArrowsRightLeftIcon, WalletIcon,PencilSquareIcon
 } from '@heroicons/vue/24/outline';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+import { route } from 'ziggy-js';
+import { Link } from '@inertiajs/vue3';
 
 defineProps<{
     groupedTransactions: Record<string, any[]>;
@@ -64,33 +66,40 @@ const getTypeStyles = (type: string) => {
                 </div>
 
                 <div class="space-y-3">
-                    <div v-for="item in transactions" :key="item.id" 
-                        class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm active:scale-[0.98] transition-all">
+                    <Link v-for="item in transactions" :key="item.uuid" 
+                        :href="route('transactions.edit', item.uuid)"
+                        class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm active:scale-[0.98] transition-all group"
+                    >
                         
                         <div :class="getTypeStyles(item.type).color" class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
                             <component :is="getTypeStyles(item.type).icon" class="w-5 h-5 stroke-[2.5]" />
                         </div>
-
-                        <div class="flex-1 min-w-0">
-                            <div class="flex justify-between items-start">
-                                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+                        <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
+                            <div class="flex justify-between items-start gap-3">
+                                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate flex-1">
                                     {{ item.description || item.category?.name }}
                                 </h4>
-                                <p :class="['text-sm font-black', ['income', 'loan_disbursement'].includes(item.type) ? 'text-emerald-600' : 'text-slate-800 dark:text-white']">
+                                <p :class="['text-sm font-black shrink-0', ['income', 'loan_disbursement'].includes(item.type) ? 'text-emerald-400' : 'text-rose-400 dark:text-rose-400']">
                                     {{ ['income', 'loan_disbursement'].includes(item.type) ? '+' : '-' }} {{ formatIDR(item.amount) }}
                                 </p>
                             </div>
                             
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded">
-                                    {{ item.wallet?.name }}
-                                </span>
-                                <span v-if="item.reference" class="text-[9px] font-bold text-indigo-500 truncate italic">
-                                    • {{ item.reference.name }}
-                                </span>
+                            <div class="flex justify-between items-end mt-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded">
+                                        {{ item.wallet?.name }}
+                                    </span>
+                                    <span v-if="item.reference" class="text-[9px] font-bold text-indigo-500 truncate italic">
+                                        • {{ item.reference.name }}
+                                    </span>
+                                </div>
+                                
+                                <div class="p-1 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 opacity-60 group-active:scale-90 transition-transform">
+                                    <PencilSquareIcon class="w-3 h-3 text-slate-500" />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
 

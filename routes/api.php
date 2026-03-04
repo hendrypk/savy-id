@@ -10,5 +10,5 @@ Route::middleware('auth')
     ->name('api.')
     ->group(function () {
         Route::apiResource('transaction-categories', TransactionCategoryController::class);
-        Route::apiResource('transactions', WalletTransactionController::class);
+        Route::apiResource('transactions', WalletTransactionController::class)->only('store', 'update', 'destroy');
     });

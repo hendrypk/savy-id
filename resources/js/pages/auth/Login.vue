@@ -11,6 +11,7 @@ import AuthBase from '@/layouts/AuthLayout.vue'
 import { register } from '@/routes'
 import { request } from '@/routes/password'
 import InputGroup from '@/components/ui/input/InputGroup.vue'
+import Label from '@/components/ui/label/Label.vue'
 
 const form = useForm({
   email: '',

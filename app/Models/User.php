@@ -131,6 +131,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Calculate total budget
+     */
+    public function totalBudget(): float
+    {
+        return (float) $this->budgets()
+            ->where('month_year', now()->format('Y-m'))
+            ->sum('plan_amount');
+    }
+
+
+    /**
      * Get the monthly savings total (from budget allocations)
      */
     public function totalSavings(): float
@@ -160,4 +171,71 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    public function balanceAsOf(\DateTimeInterface $date)
+    {
+        // 1. Get current total balance (Equity)
+        $currentBalance = $this->currentBalance();
+
+        // 2. Calculate the sum of all transactions from the target date until now
+        // We "reverse" these to find what the balance was back then
+        $changes = $this->walletTransactions()
+            ->where('transaction_date', '>', $date)
+            ->get()
+            ->reduce(function ($carry, $transaction) {
+                // If it was an inflow (money in), we subtract it to go back in time
+                if ($transaction->type->isInflow()) {
+                    return $carry - $transaction->amount;
+                } 
+                // If it was an outflow (money out), we add it back
+                return $carry + $transaction->amount;
+            }, 0);
+
+        return $currentBalance + $changes;
+    }
+
+    public function getGrowthPercentage()
+    {
+        $currentEquity = $this->currentBalance();
+        
+        $lastMonthEquity = $this->balanceAsOf(now()->subMonth()->endOfMonth());
+
+        if ($lastMonthEquity <= 0) {
+            return $currentEquity > 0 ? 100 : 0;
+        }
+
+        $growth = (($currentEquity - $lastMonthEquity) / $lastMonthEquity) * 100;
+
+        return round($growth, 2);
+    }
+
+
+    public function getCurrentBudget()
+    {
+        $currentMonth = now()->format('Y-m');
+        return $this->budgets()->where('month_year', $currentMonth)->get();
+    }
+
+    public function getBudgetUsage(): float
+    {
+        return (float) $this->budgets()
+            ->where('month_year', now()->format('Y-m'))
+            ->sum('used_amount');
+    }
+
+    public function getBudgetUsagePercentage(): float
+    {
+        $total = $this->totalBudget();
+        $used = $this->getBudgetUsage();
+
+        if ($total <= 0) {
+            return 0.00;
+        }
+
+        $percentage = ($used / $total) * 100;
+
+        return round($percentage, 2);
+    }
+
+
 }

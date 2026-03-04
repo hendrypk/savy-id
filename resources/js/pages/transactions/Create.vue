@@ -25,7 +25,11 @@ import { mobileToast } from '@/lib/swal';
  */
 interface Props {
     wallets: { id: number; name: string; balance: number }[];
-    categories: { id: number; name: string }[];
+    categories: { 
+        id: number; 
+        name: string;
+        type: string;
+    }[];
     budgets: { 
         id: number; 
         transaction_category_id: number; 
@@ -90,11 +94,31 @@ const activeWallet = computed(() =>
 /** * Resolves the name of the selected category.
  * Logic uses Number() to ensure type-safe comparison.
  */
+const filteredCategories = computed(() => {
+    // 1. Tentukan string yang dicari di kolom 'type' pada table categories
+    const targetType = isExpense.value ? 'expense' : 'income'; 
+    
+    // 2. Filter data categories dari props
+    return props.categories.filter(cat => {
+        // Gunakan toLowerCase() untuk menghindari error case-sensitive
+        return cat.type?.toLowerCase() === targetType;
+    });
+});
+
 const activeCategory = computed(() => {
     const found = props.categories.find(c => Number(c.id) === Number(form.transaction_category_id));
     return found ? found.name : 'Pilih Kategori';
 });
 
+// Tambahkan ini agar ketika tipe berubah, kategori yang tidak relevan dihapus
+watch(() => form.type, (newType) => {
+    form.transaction_category_id = '';
+    form.budget_allocation_id = '';
+    form.reference_id = '';
+    form.ref_category = '';
+});
+console.log('Semua Kategori:', props.categories);
+console.log('Tipe yang dicari:', isExpense.value ? 'expense' : 'income');
 /** Resolves label for Budget or Loan reference buttons */
 const activeReferenceLabel = computed(() => {
     if (form.ref_category === 'budget') {
@@ -156,16 +180,19 @@ const submit = () => {
             </div>
 
             <form @submit.prevent="submit" class="space-y-6">
-                <InputGroup 
-                    label="Nominal Transaksi" 
-                    v-model="form.amount" 
-                    type="number" 
-                    prefix="Rp" 
-                    :icon="BanknotesIcon" 
-                    :error="form.errors.amount" 
-                />
+                <div class="space-y-3">
+                    <InputGroup 
+                        label="Nominal Transaksi" 
+                        v-model="form.amount" 
+                        type="number" 
+                        prefix="Rp" 
+                        :icon="BanknotesIcon" 
+                        :error="form.errors.amount" 
+                        
+                    />
+                </div>
 
-                <div class="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+                <div v-if="isExpense" class="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
                     <Label class="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
                         <LinkIcon class="w-3 h-3" /> Hubungkan Ke Budget/Hutang
                     </Label>
@@ -233,7 +260,7 @@ const submit = () => {
                 </div>
 
                 <div class="grid grid-cols-1 gap-5">
-                    <div class="space-y-1.5">
+                    <div class="space-y-3">
                         <Label class="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
                             <Squares2X2Icon class="w-3 h-3" /> Kategori
                             <span v-if="form.budget_allocation_id" class="text-[8px] bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-500 px-1.5 py-0.5 rounded font-bold border border-amber-200 dark:border-amber-500/20">
@@ -260,7 +287,7 @@ const submit = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent class="w-[85vw] max-w-100 rounded-xl z-999 p-1 shadow-xl border-slate-100 dark:border-slate-800">
                                 <DropdownMenuItem 
-                                    v-for="cat in categories" :key="cat.id" 
+                                    v-for="cat in filteredCategories" :key="cat.id" 
                                     @select="form.transaction_category_id = cat.id.toString()"
                                     class="rounded-lg py-2.5 px-3 font-semibold text-xs cursor-pointer focus:bg-slate-100 dark:focus:bg-slate-800 dark:text-slate-200"
                                 >
@@ -273,7 +300,7 @@ const submit = () => {
                         </div>
 
 
-                    <div class="space-y-1.5">
+                    <div class="space-y-3">
                         <Label class="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
                             <WalletIcon class="w-3 h-3" /> Sumber Dana
                         </Label>

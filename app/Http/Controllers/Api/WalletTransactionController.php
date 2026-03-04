@@ -15,32 +15,7 @@ use Inertia\Inertia;
 
 class WalletTransactionController extends Controller
 {
-public function index()
-{
-    $transactions = WalletTransaction::with(['category', 'wallet', 'reference'])
-        ->where('user_id', auth()->id())
-        ->orderBy('transaction_date', 'desc')
-        ->orderBy('created_at', 'desc')
-        ->get()
-        ->groupBy(function($item) {
-            return $item->transaction_date->format('Y-m-d');
-        });
 
-    return Inertia::render('transactions/Index', [
-        'groupedTransactions' => $transactions,
-        'stats' => [
-            'total_balance' => auth()->user()->wallets()->sum('balance'),
-            'this_month_expense' => WalletTransaction::where('user_id', auth()->id())
-                ->whereMonth('transaction_date', now()->month)
-                ->whereIn('type', ['expense', 'loan_repayment', 'saving'])
-                ->sum('amount'),
-            'this_month_income' => WalletTransaction::where('user_id', auth()->id())
-                ->whereMonth('transaction_date', now()->month)
-                ->whereIn('type', ['income', 'loan_disbursement'])
-                ->sum('amount'),
-        ]
-    ]);
-}
 
     public function store(StoreTransactionRequest $request)
     {
@@ -66,7 +41,26 @@ public function index()
                 'user_id' => auth()->id(),
             ]);
 
-            return redirect()->route('api.transactions.index');
+            return redirect()->route('transactions.index');
+        });
+    }
+
+    /**
+     * Remove the specified transaction from storage.
+     */
+    public function destroy(WalletTransaction $transaction)
+    {
+        // Authorization: Ensure the user owns the transaction
+        if ($transaction->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return DB::transaction(function () use ($transaction) {
+            // Just Delete: The Observer's "deleted" or "deleting" method 
+            // will automatically handle the balance reversal.
+            $transaction->delete();
+
+            return redirect()->route('transactions.index');
         });
     }
 }

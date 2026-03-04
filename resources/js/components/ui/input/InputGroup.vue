@@ -65,9 +65,9 @@ const internalValue = computed({
       />
     </div>
 
-    <div class="h-4 mt-0.5">
+    <div v-if="error" class="h-4 mt-0.5">
       <Transition name="fade">
-        <p v-if="error" class="text-[9px] text-rose-500 font-bold ml-2 italic">
+        <p class="text-[9px] text-rose-500 font-bold ml-2 italic">
           {{ error }}
         </p>
       </Transition>

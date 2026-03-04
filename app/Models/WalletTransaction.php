@@ -45,6 +45,11 @@ class WalletTransaction extends Model
             $transaction->uuid = (string) Str::uuid();
         });
     }
+    
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 
     /**
      * The Polymorphic Relationship.
