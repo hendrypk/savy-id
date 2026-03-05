@@ -19,43 +19,60 @@ class BudgetAllocationController extends Controller
 {
     public function index(Request $request): Response
     {
+        $userId = Auth::id();
         $monthParam = $request->query('month', now()->format('Y-m'));
         $date = \Carbon\Carbon::parse($monthParam);
-        $userId = Auth::id();
 
+        // 1. Fetch budgets with spending summed up in one single SQL query
         $budgets = BudgetAllocation::where('user_id', $userId)
             ->where('month_year', $monthParam)
             ->with('category')
             ->withSum(['transactions as spent_amount' => function ($query) {
                 $query->whereIn('type', ['budget_spending', 'expense']);
             }], 'amount')
-            ->get()
-            ->map(fn($budget) => $this->formatBudget($budget));
+            ->get();
+
+        // 2. Calculate totals from the collection (Guarantees consistency with the rows)
+        $totalPlanned = (float) $budgets->sum('plan_amount');
+        $totalSpent   = (float) $budgets->sum('spent_amount');
+        
+        // Calculate usage percentage for the header
+        $usagePct = $totalPlanned > 0 ? (int) round(($totalSpent / $totalPlanned) * 100) : 0;
 
         return Inertia::render('budget/Index', [
-            'categories' => $budgets,
-            'total_planned' => (float) $budgets->sum('plan_amount'),
-            'total_spent' => (float) $budgets->sum('spent_amount'),
-            'current_month_raw' => $monthParam,
+            'budgets'           => $budgets->map(fn($budget) => $this->formatBudget($budget)),
+            'total_planned'     => $totalPlanned,
+            'total_spent'       => $totalSpent,
+            'usage_pct'         => $usagePct,
+            
+            // Static call for historical comparison (Last Month vs This Month)
+            'analysis'          => BudgetAllocation::getMonthlyAnalysis($userId, $monthParam),
+            
+            'current_month_raw'   => $monthParam,
             'current_month_label' => $date->translatedFormat('F Y'),
         ]);
     }
 
-    private function formatBudget($budget): array
+    protected function formatBudget($budget)
     {
-        $spent = (float) ($budget->spent_amount ?? 0);
-        $plan = (float) $budget->plan_amount;
+        $planned = (float) $budget->plan_amount;
+        // Use 'spent_amount' from withSum if available, otherwise fallback to accessor
+        $spent   = (float) ($budget->spent_amount ?? $budget->used_amount);
         
+        // Calculate percentage as a whole number (Integer)
+        $percentage = $planned > 0 ? ($spent / $planned) * 100 : 0;
+
         return [
-            'uuid' => $budget->uuid,
-            'name' => $budget->category->name ?? 'N/A',
-            'plan_amount' => $plan,
-            'spent_amount' => $spent,
-            'remaining' => $plan - $spent,
-            'percentage' => $plan > 0 ? round(($spent / $plan) * 100) : 0,
+            'uuid'            => $budget->uuid,
+            'name'            => $budget->name,
+            'plan_amount'     => $planned,
+            'spent_amount'    => $spent,
+            'remaining'       => max(0, $planned - $spent),
+            'category_name'   => $budget->category->name ?? 'Uncategorized',
+            'month_year'      => $budget->month_year,
+            'percentage'      => (int) round($percentage) 
         ];
     }
-
     /**
      * Show the form for creating a new budget allocation.
      * * @return \Inertia\Response
@@ -139,7 +156,7 @@ class BudgetAllocationController extends Controller
         return Inertia::render('budget/Show', [
             'budget' => [
                 'uuid' => $budget->uuid,
-                'name' => $budget->category->name,
+                'name' => $budget->name,
                 'plan_amount' => (float) $budget->plan_amount,
                 'spent_amount' => (float) ($budget->spent_amount ?? 0),
                 'remaining' => (float) ($budget->plan_amount - ($budget->spent_amount ?? 0)),
@@ -157,7 +174,16 @@ class BudgetAllocationController extends Controller
         $budget = BudgetAllocation::where('uuid', $uuid)->firstOrFail();
 
         // 2. Validation: Check if transactions exist for this specific budget ID
-        $hasTransactions = WalletTransaction::where('budget_allocation_id', $budget->id)->exists();
+        $hasTransactions = WalletTransaction::where('reference_type', BudgetAllocation::class)
+            ->where('reference_id', $budget->id)
+            ->exists();
+
+            if($budget->loan_id) {
+            return redirect()->back()->withErrors([
+                'message' => 'Anggaran cicilan pinjaman tidak dapat dihapus secara manual.'
+            ]);
+        }
+            
 
         if ($hasTransactions) {
             // Return with an error message that Inertia's onError will catch

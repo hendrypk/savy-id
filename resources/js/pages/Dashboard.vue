@@ -7,15 +7,14 @@ import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 // Icons
 import { 
   PlusIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
-  CreditCardIcon, HandRaisedIcon, EyeIcon, EyeSlashIcon,
-  ArrowDownLeftIcon,
-  ArrowUpLeftIcon
+  HandRaisedIcon, EyeIcon, EyeSlashIcon,
+  ArrowDownLeftIcon, ArrowUpLeftIcon,
+  CheckBadgeIcon, ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline';
-import budget from '@/routes/budget';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 
-// Props Definition
+// Props dari DashboardController yang baru
 interface Props {
   inspiringQuote: { text: string; author: string };
   stats: {
@@ -26,21 +25,23 @@ interface Props {
     growth_percentage: number;
     budget_usage_percentage: number;
     budget_usage: number;
+    analysis: {
+      value: number;
+      status: 'saving' | 'spending' | 'stable';
+      message: string;
+    };
   };
-  budgets: Array<{
-    id: number;
-    name: string;
-    plan_amount: number;
-    used_amount: number;
-    remaining_amount: number;
-    percentage: number;
-  }>;
+  budgets: any[];
   recentTransactions: any[];
   activeLoans: any[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  stats: () => ({ total_equity: 0, total_debt: 0, monthly_savings: 0, growth_percentage: 0 }),
+  stats: () => ({ 
+    total_equity: 0, total_debt: 0, monthly_savings: 0, growth_percentage: 0, 
+    budget_usage_percentage: 0, budget_usage: 0,
+    analysis: { value: 0, status: 'stable', message: '' }
+  }),
   recentTransactions: () => [],
   activeLoans: () => []
 });
@@ -68,15 +69,17 @@ const formatIDR = (val: number) => {
 
 const displayValue = (val: number) => isHidden.value ? '---------' : formatIDR(val);
 </script>
+
 <template>
   <Head title="Ringkasan Keuangan" />
 
   <UserMobileLayout title="Dashboard">
     <div class="space-y-7 pb-12">
+      
       <section class="mb-6 block md:hidden px-1">
         <div class="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-900 dark:text-indigo-200 p-5 rounded-3xl border border-indigo-100/50 dark:border-indigo-800/50 shadow-sm">
           <p class="font-bold text-[11px] text-center leading-relaxed italic">
-            "{{ inspiringQuote.text }}"
+            {{ inspiringQuote.text }}
           </p>
           <p class="text-[9px] text-center text-gray-400 dark:text-gray-400 mt-2 font-normal">
             — {{ inspiringQuote.author }}
@@ -95,7 +98,7 @@ const displayValue = (val: number) => isHidden.value ? '---------' : formatIDR(v
                 </span>
                 <div class="flex items-center gap-2 mt-1">
                   <span class="text-[11px] font-bold text-emerald-500">
-                    +{{ stats.growth_percentage }}%
+                    {{ stats.growth_percentage >= 0 ? '+' : '' }}{{ stats.growth_percentage }}%
                   </span>
                   <span class="text-[9px] font-medium text-slate-300">vs bln lalu</span>
                 </div>
@@ -156,6 +159,36 @@ const displayValue = (val: number) => isHidden.value ? '---------' : formatIDR(v
         </Card>
       </section>
 
+      <section v-if="stats.analysis.status !== 'stable'" class="px-2">
+        <Card 
+            :class="[
+                'rounded-2xl border transition-all duration-500 shadow-sm',
+                stats.analysis.status === 'saving' 
+                    ? 'bg-emerald-50/80 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-500/20' 
+                    : 'bg-rose-50/80 dark:bg-rose-500/10 border-rose-100 dark:border-rose-500/20'
+            ]"
+        >
+            <CardContent class="flex items-center gap-4 p-4">
+                <div :class="[
+                        'w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg dark:shadow-none',
+                        stats.analysis.status === 'saving' ? 'bg-emerald-500 shadow-emerald-200' : 'bg-rose-500 shadow-rose-200'
+                    ]">
+                    <CheckBadgeIcon v-if="stats.analysis.status === 'saving'" class="w-6 h-6 text-white" />
+                    <ExclamationTriangleIcon v-else class="w-6 h-6 text-white" />
+                </div>
+                <div class="flex-1 space-y-0.5">
+                    <h4 :class="stats.analysis.status === 'saving' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'" 
+                        class="text-[9px] font-black uppercase tracking-widest mb-0.5">
+                        Analisis Keuangan
+                    </h4>
+                    <p class="text-[11px] font-bold text-slate-600 dark:text-slate-300 leading-snug">
+                        {{ stats.analysis.message }}
+                    </p>
+                </div>
+            </CardContent>
+        </Card>
+      </section>
+
       <section class="px-2">
           <Card>
             <CardContent class="flex justify-around items-center">
@@ -173,53 +206,17 @@ const displayValue = (val: number) => isHidden.value ? '---------' : formatIDR(v
                 <div :class="[action.bg, action.text]" class="p-3 rounded-2xl group-active:scale-90 transition-all">
                   <component :is="action.icon" class="w-6 h-6" />
                 </div>
-                
                 <span class="text-[10px] font-black text-slate-500 uppercase">{{ action.label }}</span>
               </Link>
             </CardContent>
           </Card>
       </section>
 
-      <!-- <section>
-        <h3 class="font-black text-slate-800 dark:text-white uppercase text-xs tracking-widest mb-4 px-2">Pinjaman Aktif</h3>
-        <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-5 px-5">
-          
-        <Card>
-          <CardContent>
-            <div class="flex gap-4 overflow-x-auto hide-scrollbar snap-x">
-              <div v-for="loan in activeLoans" :key="loan.id" 
-                  class="snap-center flex w-25 flex-col justify-between h-25 p-2 ">
-                
-                <div class="flex justify-between items-start">
-                  <div class="bg-white dark:bg-slate-700 shadow-sm p-2 rounded-xl">
-                    <CreditCardIcon class="w-4 h-4 text-indigo-500" />
-                  </div>
-                  <div class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></div>
-                </div>
-
-                <div>
-                  <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider mb-0.5">{{ loan.provider }}</p>
-                  <p class="text-sm font-black text-slate-900 dark:text-white leading-tight">
-                    {{ displayValue(loan.amount) }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-          <Link 
-            :href="route('loans.create')" 
-            class="min-w-28 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
-          >
-            <PlusIcon class="w-6 h-6 text-slate-400" />
-          </Link>
-        </div>
-      </section> -->
-      <section class="mt-8 px-2">
+      <section class="px-2">
         <Card>
           <CardContent>
             <div class="flex items-center justify-between mb-5 px-1">
-              <h3 class="font-black text-slate-400 uppercase text-[9px] tracking-[0.15em]">Aktivitas</h3>
+              <h3 class="font-black text-slate-400 uppercase text-[9px] tracking-[0.15em]">Aktivitas Terakhir</h3>
               <Link :href="route('transactions.index')" class="text-[9px] font-black uppercase text-indigo-500">Semua</Link>
             </div>
 

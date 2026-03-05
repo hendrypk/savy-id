@@ -55,7 +55,17 @@ class WalletTransactionController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        
         return DB::transaction(function () use ($transaction) {
+            if ($transaction->reference_type === \App\Models\BudgetAllocation::class) {
+                $budget = $transaction->reference; // Mengambil model Budget terkait
+                
+                if ($budget) {
+                    // Kurangi used_amount di budget dengan amount transaksi yang akan dihapus
+                    // Kita gunakan decrement untuk keamanan database (atomic operation)
+                    $budget->decrement('used_amount', $transaction->amount);
+                }
+            }
             // Just Delete: The Observer's "deleted" or "deleting" method 
             // will automatically handle the balance reversal.
             $transaction->delete();

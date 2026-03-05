@@ -166,11 +166,6 @@ const formatCurrency = (value: number | string | null) => {
           <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-widest leading-relaxed">
             Your financial path is clear. Add a loan to start tracking your repayment progress.
           </p>
-          <Link :href="route('loans.create')" class="mt-8">
-            <Button variant="purple" class="rounded-full px-8 h-12 font-black uppercase text-[10px] tracking-[0.15em] shadow-lg shadow-indigo-200 dark:shadow-none">
-              Get Started
-            </Button>
-          </Link>
         </div>
 
       </div>

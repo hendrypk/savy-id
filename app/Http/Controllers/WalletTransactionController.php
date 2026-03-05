@@ -43,7 +43,6 @@ class WalletTransactionController extends Controller
     {
         $userId = auth()->id();
         $currentMonth = now()->format('Y-m');
-
         // 1. Prepare Wallets
         $wallets = Wallet::where('user_id', $userId)
             ->get(['id', 'name', 'balance']);
@@ -57,9 +56,7 @@ class WalletTransactionController extends Controller
                 'id'          => $budget->id,
                 'transaction_category_id' => $budget->transaction_category_id, // WAJIB ADA agar frontend bisa auto-select
                 'loan_id'     => $budget->loan_id,
-                'name'        => $budget->loan_id 
-                                ? "Cicilan: " . ($budget->loan->name ?? 'Pinjaman') 
-                                : ($budget->category->name ?? 'Tanpa Kategori'),
+                'name'        => $budget->name ?? 'Tanpa Kategori',
                 'plan_amount' => $budget->plan_amount,
                 'remaining'   => $budget->remaining_amount,
             ]);

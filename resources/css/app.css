@@ -179,6 +179,38 @@
         top: 0;
     }
 
+    /* PICKER RESET: 
+       Menghilangkan ikon bawaan & membuat area klik memenuhi container 
+    */
+    /* 1. Neutralize the input field itself */
+    input[type="month"], 
+    input[type="date"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: transparent;
+        position: relative;
+    }
+
+    /* 2. Hide ALL default browser UI elements (Ikon, Spin Button, Clear Button) */
+    input[type="month"]::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="month"]::-webkit-inner-spin-button,
+    input[type="month"]::-webkit-clear-button {
+        background: transparent;
+        color: transparent;
+        cursor: pointer;
+        
+        /* Make the invisible indicator cover the whole input area */
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        z-index: 10;
+    }
+    
     #app {
         width: 100%;
         height: 100%;
@@ -233,4 +265,9 @@
   justify-content: space-between;
   align-items: center;
   z-index: 1;
+}
+
+input[type="month"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    /* ... sisa kode lainnya */
 }

@@ -59,7 +59,9 @@ const deleteLoan = async (uuid: string) => {
             onSuccess: () => {
                 mobileToast('Pinjaman berhasil dihapus');
             },
-            onFinish: () => {
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                mobileToast(firstError || 'Gagal menghapus pinjaman', 'error');
             },
             preserveScroll: true 
         });

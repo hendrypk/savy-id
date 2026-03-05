@@ -87,6 +87,7 @@ class LoanController extends Controller
                         $budgetData[] = [
                             'uuid'                    => Str::uuid()->toString(),
                             'user_id'                 => $user->id,
+                            'name' => 'Cicilan ' .  $loan->name . ' ke ' . ($i + 1),
                             'transaction_category_id' => $category->id,
                             'loan_id' => $loan->id,
                             'plan_amount'             => $loan->monthly_installment,

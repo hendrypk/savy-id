@@ -53,18 +53,22 @@ class CreateNewUser implements CreatesNewUsers
             ['name' => 'Gaji & Pendapatan', 'icon' => 'currency-dollar', 'color' => '#10b981', 'type' => 'income', 'is_system' => 0],
         ];
 
+        
         foreach ($categories as $cat) {
-            TransactionCategory::create([
-                'user_id'   => $user->id,
-                'uuid'      => (string) Str::uuid(),
-                // Unique slug per user to avoid database collisions
-                'slug'      => Str::slug($cat['name']) . '-' . $user->id, 
-                'name'      => $cat['name'],
-                'icon'      => $cat['icon'],
-                'color'     => $cat['color'],
-                'type'      => $cat['type'],
-                'is_system' => $cat['is_system'],
-            ]);
+            $slug = Str::slug($cat['name']) . '-' . $user->id;
+
+            TransactionCategory::firstOrCreate(
+                ['slug' => $slug], 
+                [
+                    'user_id'   => $user->id,
+                    'uuid'      => (string) Str::uuid(),
+                    'name'      => $cat['name'],
+                    'icon'      => $cat['icon'],
+                    'color'     => $cat['color'],
+                    'type'      => $cat['type'],
+                    'is_system' => $cat['is_system'],
+                ]
+            );
         }
     }
 }
