@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { route } from 'ziggy-js';
 import MobileHeader from './app/MobileHeader.vue';
 import MobileNav from './app/MobileNav.vue';
+import { isNavExpandedGlobal } from '@/stores/navState';
 
 defineProps<{
     title?: string;
