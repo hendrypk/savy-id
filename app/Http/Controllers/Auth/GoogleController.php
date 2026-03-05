@@ -18,19 +18,48 @@ class GoogleController extends Controller
 
     public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        try {
+            // Retrieve user data from Google
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Google authentication failed.');
+        }
 
+        /**
+         * updateOrCreate will:
+         * 1. Create a new user if the email doesn't exist (Registration).
+         * 2. Update the google_id and verification status if the email exists (Login).
+         */
         $user = User::updateOrCreate(
             ['email' => $googleUser->getEmail()],
             [
                 'name' => $googleUser->getName(),
                 'google_id' => $googleUser->getId(),
-                'email_verified_at' => now(),
-            ],
-
+                // Ensure the user is marked as verified since they came from a trusted provider
+                'email_verified_at' => isset($googleUser->user['email_verified']) && $googleUser->user['email_verified'] 
+                    ? now() 
+                    : null,
+            ]
         );
-            $this->seedDefaultCategories($user);
 
+        // 1. REGISTRATION LOGIC
+        // This runs ONLY the first time the account is created
+        if ($user->wasRecentlyCreated) {
+            $this->seedDefaultCategories($user);
+            
+            // You could also create a default wallet here
+            // $user->wallets()->create(['name' => 'Main Wallet', 'balance' => 0]);
+
+            session()->flash('status', 'Welcome! Your account has been successfully created.');
+        } 
+        
+        // 2. LOGIN LOGIC
+        // This runs for returning users
+        else {
+            session()->flash('status', 'Welcome back!');
+        }
+
+        // Log the user in
         Auth::login($user);
 
         return redirect()->route('dashboard');
