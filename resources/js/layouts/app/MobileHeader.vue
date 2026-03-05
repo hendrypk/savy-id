@@ -58,7 +58,6 @@ const goBackManual = () => {
             <slot name="right-action" />
 
             <Link 
-                v-if="showNav"
                 href="/settings"
                 class="flex items-center gap-2 p-1 pr-3 rounded-full bg-slate-100/50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 active:scale-95 transition-all group"
             >

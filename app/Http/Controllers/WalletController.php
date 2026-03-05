@@ -74,6 +74,7 @@ class WalletController extends Controller
         return inertia('wallets/Show', [
             'wallet' => $wallet,
             'transactions' => $wallet->transactions() 
+                ->with('category')
                 ->latest()
                 ->limit(20)
                 ->get()

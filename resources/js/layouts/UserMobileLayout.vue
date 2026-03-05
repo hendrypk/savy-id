@@ -53,7 +53,6 @@ const inactiveClass = "text-slate-400 dark:text-slate-500 hover:text-slate-600";
             </main>
 
             <MobileNav 
-                v-if="showNav"
                 :isHome="isHome" 
                 :isBudget="isBudget" 
                 :isWallet="isWallet" 

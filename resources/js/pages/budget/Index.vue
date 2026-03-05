@@ -237,7 +237,7 @@ const daysRemaining = computed(() => {
       </div>
     </div>
 
-    <Fab :href="route('budget.create')" class="bottom-28 shadow-indigo-200" />
+    <Fab :href="route('budget.create')" />
   </UserMobileLayout>
 </template>
 

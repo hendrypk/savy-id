@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Str;
 
 class Wallet extends Model
@@ -28,9 +30,9 @@ class Wallet extends Model
         return $this->belongsTo(User::class);
     }
         
-    public function transactions() {
-        return $this->morphToMany(WalletTransaction::class, 'reference');
-    }
+public function transactions() {
+    return $this->hasMany(WalletTransaction::class, 'wallet_id');
+}
 
     public function getRouteKeyName()
     {

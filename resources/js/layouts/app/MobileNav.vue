@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { 
   HomeIcon as HomeOutline, ChartBarIcon as ChartOutline, 
-  WalletIcon as WalletOutline, BanknotesIcon as LoansOutline, SparklesIcon as GoalsOutline 
+  WalletIcon as WalletOutline, BanknotesIcon as LoansOutline, SparklesIcon as GoalsOutline,
+  Bars3Icon, XMarkIcon
 } from '@heroicons/vue/24/outline';
 import { 
   HomeIcon as HomeSolid, ChartBarIcon as ChartSolid, 
-  WalletIcon as WalletSolid, BanknotesIcon as LoansSolid, SparklesIcon as GoalssSolid 
+  WalletIcon as WalletSolid, BanknotesIcon as LoansSolid, SparklesIcon as GoalsSolid 
 } from '@heroicons/vue/24/solid';
 import { Link } from '@inertiajs/vue3';
 
@@ -13,72 +15,97 @@ defineProps<{
     isHome: boolean;
     isBudget: boolean;
     isWallet: boolean;
-    isSavings: boolean; // Tombol Tengah
-    isLoans: boolean;   // Tombol Kanan
+    isSavings: boolean;
+    isLoans: boolean;
 }>();
 
-const getLinkStyles = (isActive: boolean) => [
-    'flex flex-col items-center flex-1 transition-all duration-300',
-    isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
-];
+const isExpanded = ref(false);
 
-const getLabelStyles = (isActive: boolean) => [
-    'text-[9px] mt-1.5 font-black uppercase tracking-tighter transition-all duration-300',
-    isActive ? 'opacity-100' : 'opacity-40'
+const toggleNav = () => {
+    isExpanded.value = !isExpanded.value;
+};
+
+const getLinkStyles = (isActive: boolean) => [
+    'flex flex-col items-center flex-1 transition-all duration-300 delay-150',
+    isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400',
 ];
 </script>
 
 <template>
-    <div class="fixed bottom-3 p-2 left-1/2 -translate-x-1/2 w-[94%] max-w-md z-50">
-        
-        <div class="savy-nav-container shadow-2xl mx-2">
-  
-  <div class="savy-nav-anim-layer"></div>
-
-  <nav class="savy-nav-content px-6 py-4">
-        <!-- <nav class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-indigo-800/50 dark:border-indigo-800 px-2 py-3 rounded-[2.5rem] flex justify-between items-end shadow-2xl"> -->
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-[100] pb-safe pointer-events-none">
+        <div class="p-6 flex justify-end items-end">
             
-            <Link href="/" :class="getLinkStyles(isHome)">
-                <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isHome ? HomeSolid : HomeOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isHome" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <span :class="getLabelStyles(isHome)">Home</span>
-            </Link>
+            <div 
+                class="savy-nav-container shadow-2xl relative flex items-center bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800 transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] pointer-events-auto overflow-hidden"
+                :class="[isExpanded ? 'w-full h-[85px] rounded-[2.5rem] px-2' : 'w-16 h-16 rounded-full']"
+            >
+                <transition name="fade-slide">
+                    <nav v-if="isExpanded" class="savy-nav-content flex justify-between items-center w-full px-4">
+                        <Link href="/" :class="getLinkStyles(isHome)">
+                            <component :is="isHome ? HomeSolid : HomeOutline" class="w-6 h-6" />
+                            <span class="text-[9px] mt-1.5 font-black uppercase tracking-tighter">Home</span>
+                        </Link>
 
-            <Link href="/budget" :class="getLinkStyles(isBudget)">
-                <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isBudget ? ChartSolid : ChartOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isBudget" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <span :class="getLabelStyles(isBudget)">Budget</span>
-            </Link>
+                        <Link href="/budget" :class="getLinkStyles(isBudget)">
+                            <component :is="isBudget ? ChartSolid : ChartOutline" class="w-6 h-6" />
+                            <span class="text-[9px] mt-1.5 font-black uppercase tracking-tighter">Budget</span>
+                        </Link>
 
-            <Link href="/saving" :class="getLinkStyles(isSavings)">
-                <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isSavings ? GoalssSolid : GoalsOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isSavings" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <span :class="getLabelStyles(isSavings)">Golas</span>
-            </Link>
+                        <Link href="/wallets" :class="getLinkStyles(isWallet)">
+                            <component :is="isWallet ? WalletSolid : WalletOutline" class="w-6 h-6" />
+                            <span class="text-[9px] mt-1.5 font-black uppercase tracking-tighter">Wallet</span>
+                        </Link>
 
-            <Link href="/wallets" :class="getLinkStyles(isWallet)">
-                <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isWallet ? WalletSolid : WalletOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isWallet" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <span :class="getLabelStyles(isWallet)">Wallet</span>
-            </Link>
+                        <Link href="/loans" :class="getLinkStyles(isLoans)">
+                            <component :is="isLoans ? LoansSolid : LoansOutline" class="w-6 h-6" />
+                            <span class="text-[9px] mt-1.5 font-black uppercase tracking-tighter">Loans</span>
+                        </Link>
 
-            <Link href="/loans" :class="getLinkStyles(isLoans)">
-                <div class="relative flex items-center justify-center h-6 w-6">
-                    <component :is="isLoans ? LoansSolid : LoansOutline" class="w-6 h-6 active:scale-90" />
-                    <div v-if="isLoans" class="absolute -bottom-1 w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <span :class="getLabelStyles(isLoans)">Loans</span>
-            </Link>
+                        <button @click="toggleNav" class="flex flex-col items-center flex-1 text-rose-500">
+                            <div class="w-10 h-10 bg-rose-50 dark:bg-rose-950/30 rounded-full flex items-center justify-center active:scale-90 transition-all">
+                                <XMarkIcon class="w-6 h-6 stroke-[2.5px]" />
+                            </div>
+                            <span class="text-[9px] mt-1 font-black uppercase opacity-60">Close</span>
+                        </button>
+                    </nav>
+                </transition>
 
-        </nav>
-    </div>
+                <button 
+                    v-if="!isExpanded" 
+                    @click="toggleNav"
+                    class="w-full h-full flex items-center justify-center bg-indigo-500 text-white active:scale-90 transition-all"
+                >
+                    <Bars3Icon class="w-7 h-7 stroke-[2.5px]" />
+                </button>
+
+            </div>
+        </div>
     </div>
 </template>
+
+<style scoped>
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Animasi Fade & Slide untuk konten Nav */
+.fade-slide-enter-active {
+    transition: all 0.3s ease-out;
+    transition-delay: 0.2s; /* Tunggu container melebar sedikit */
+}
+.fade-slide-leave-active {
+    transition: all 0.2s ease-in;
+}
+.fade-slide-enter-from {
+    opacity: 0;
+    transform: translateY(10px);
+}
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.savy-nav-container {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+</style>

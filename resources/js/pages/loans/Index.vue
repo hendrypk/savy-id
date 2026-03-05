@@ -170,7 +170,7 @@ const formatCurrency = (value: number | string | null) => {
       </div>
     </div>
 
-    <Fab :href="route('loans.create')" class="bottom-28" />
+    <Fab :href="route('loans.create')" />
 
   </UserMobileLayout>
 </template>

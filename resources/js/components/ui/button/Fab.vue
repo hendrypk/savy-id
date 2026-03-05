@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div :class="cn('fixed bottom-8 right-6 z-50', props.class)">
+  <div :class="cn('fixed bottom-27 right-6 z-50', props.class)">
     <Link v-if="href" :href="href">
       <div class="relative group">
         <div 
