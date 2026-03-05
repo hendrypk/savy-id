@@ -6,7 +6,6 @@ import {
 } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js'; 
-import Button from '@/components/ui/button/Button.vue';
 import Fab from '@/components/ui/button/Fab.vue';
 import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 

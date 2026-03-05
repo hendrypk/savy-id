@@ -1,16 +1,13 @@
 <script setup lang="ts">
+import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 import { Form, Head, useForm } from '@inertiajs/vue3'
+import { ref } from 'vue'
 import { route } from 'ziggy-js'
-import { readonly, ref } from 'vue'
 
 import { Button } from '@/components/ui/button'
+import InputGroup from '@/components/ui/input/InputGroup.vue'
 import { Spinner } from '@/components/ui/spinner'
 import AuthLayout from '@/layouts/AuthLayout.vue'
-import InputGroup from '@/components/ui/input/InputGroup.vue'
-import InputError from '@/components/InputError.vue'
-
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
-import { update } from '@/routes/password'
 
 const props = defineProps<{
   token: string

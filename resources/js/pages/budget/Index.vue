@@ -11,12 +11,12 @@ import {
 } from '@heroicons/vue/24/outline';
 import { WalletIcon } from '@heroicons/vue/24/solid';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 import Fab from '@/components/ui/button/Fab.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
-import { ref, computed } from 'vue';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
 
 interface Budget {
   uuid: string;

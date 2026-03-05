@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import { EnvelopeIcon } from '@heroicons/vue/24/outline'
 import { Form, Head, useForm } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 
 import TextLink from '@/components/TextLink.vue'
 import { Button } from '@/components/ui/button'
+import InputGroup from '@/components/ui/input/InputGroup.vue'
 import { Spinner } from '@/components/ui/spinner'
 import AuthLayout from '@/layouts/AuthLayout.vue'
-import InputGroup from '@/components/ui/input/InputGroup.vue'
 
-import { EnvelopeIcon } from '@heroicons/vue/24/outline'
 import { login } from '@/routes'
 
 defineProps<{

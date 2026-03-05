@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
-import { route } from 'ziggy-js';
-import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
-
-// Icons
 import { 
   PlusIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
   HandRaisedIcon, EyeIcon, EyeSlashIcon,
   ArrowDownLeftIcon, ArrowUpLeftIcon,
   CheckBadgeIcon, ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline';
+import { Head, Link } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
+import { route } from 'ziggy-js';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
+import UserMobileLayout from '@/layouts/UserMobileLayout.vue';
+
+// Icons
 
 // Props dari DashboardController yang baru
 interface Props {
